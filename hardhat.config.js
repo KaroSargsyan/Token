@@ -1,3 +1,4 @@
+require("@nomiclabs/hardhat-waffle");
 require('@openzeppelin/hardhat-upgrades');
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -21,14 +22,19 @@ module.exports = {
   networks: {
     ropsten: {
       url: "https://ropsten.infura.io/v3/059d3e91176d43c79354db9156588d70", //Infura url with projectId
-      accounts: ["1313fd0ea9d450c6ef53c4a623efab294798eccff2bd77e5ac659da7f31a0400"] // add the account that will deploy the contract (private key)
+      accounts: ["b78330805132f471817bc7db07168d1d26c8c162c0e96dfdf4a8b2016082101f"] // add the account that will deploy the contract (private key)
      },
+
+
+     hardhat: {
+      forking: {
+        url: "https://eth-mainnet.alchemyapi.io/v2/zSLEylkSYyz9hEvQcJBbdDq7Hk35HqAG",
+      },
+    }
    },
    etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: {
-      ropsten: "QBPG4NSN42M33J8HG3KCWBK35CM1DW1MGK"
-    }
+    apiKey: "QBPG4NSN42M33J8HG3KCWBK35CM1DW1MGK"
   }
 };

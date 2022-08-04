@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.10;
+pragma solidity ^0.8.9;
 
 
 import "./ERC20Upgradeable.sol";
@@ -9,6 +9,7 @@ import "./UUPSUpgradeable.sol";
 import "./IUniswapV2Router01.sol";
 import "./AggregatorV3Interface.sol";
 import "./XToken.sol";
+import "hardhat/console.sol";
 
 contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     
@@ -25,7 +26,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
     mapping(address => uint256)  _tokenVsIndex;
     mapping(address => uint256[])  _userVsLockIds;
-    mapping(uint256 => LockedAsset)  _idVsLockedAsset;
+    mapping(uint256 => LockedAsset) public  _idVsLockedAsset;    //CHANGE: remove public
 
     XToken xtoken;
 
@@ -142,7 +143,6 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         require(beneficiary != address(0),"Send valid beneficiary address");
         require(_token != address(0),"Send valid token address");
         require(endDate>=minLockDate,"Send correct endDate");
-        
         Token storage token = _tokens[_tokenVsIndex[_token]];
         require(amount >= token.minAmount,"Minimum amount of tokens");
         uint _totalprocent;
@@ -153,23 +153,22 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             } 
             _totalprocent +=  option[i][1];
         }
-
         uint newAmount=_calculateFee(amount,endDate);
         token.balance+=newAmount-amount;
         
         if(ETH == _token) {
-            require( msg.value == newAmount,"Insufficient funds");
+            require( msg.value >= newAmount,"Insufficient funds");
         } else {
+            console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
             ERC20Upgradeable(_token).transferFrom(msg.sender, address(this), newAmount);
-        }
 
+        }
         endDate += block.timestamp;
         int priceInUSD = getLatestPrice(token.priceFeedAddress);
 
         _idVsLockedAsset[_lockId]= LockedAsset({ token: _token, amount: amount, startDate: block.timestamp, 
             endDate: endDate, lastLocked: block.timestamp, option: option, 
             beneficiary: beneficiary, isExchangable:isExchangable,status:Status.OPEN,priceInUSD:priceInUSD});
-        
         _userVsLockIds[beneficiary].push(_lockId);
         xtoken.airdrop(msg.sender,1);
         _lockId++;
@@ -208,7 +207,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     function claim(uint256 id, address SWAPTOKEN ) public payable canClaim(id) {
         LockedAsset storage asset = _idVsLockedAsset[id];
         uint newAmount=asset.amount-((asset.amount*asset.option[0][1])/100);
-
+        console.log("1111111111111111111111111111");
         for(uint i = 0; i < asset.option.length-1; i++){
             asset.option[i] = asset.option[i+1];      
         }
@@ -227,6 +226,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             if (asset.isExchangable){
                 swap(asset.token, SWAPTOKEN, newAmount, asset.beneficiary);
             } else {
+                console.log("22222222222222222222");
                 ERC20Upgradeable(asset.token).transfer(asset.beneficiary, newAmount);
             }
         }
@@ -241,16 +241,16 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
 
-    function claimable(uint256 id) internal view returns(bool _claimable){
+    function claimable(uint256 id) public view returns(bool _claimable){   //CHANGE: internal
         LockedAsset memory asset = _idVsLockedAsset[id];
         require(asset.status == Status.OPEN,"Asset is closed");
-        if( asset.endDate <= block.timestamp || _eventIs(id)) {
+        if( asset.endDate <= block.timestamp /*|| _eventIs(id)*/) {        //CHANGE: uncomment
             return true;
         }
     }
 
 
-    function _eventIs(uint id) internal view returns(bool success ) {
+    function _eventIs(uint id) public view returns(bool success ) { //CHANGE: internal
         LockedAsset memory asset = _idVsLockedAsset[id];
         int newAmount = asset.priceInUSD*int(asset.option[0][0]);
         (
@@ -262,6 +262,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         int oraclePrice = getLatestPrice(_priceFeedAddress);
 
         if (newAmount>=oraclePrice){
+
             return true;
         } else {
             return false;
@@ -269,13 +270,15 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     } 
 
 
-    function _calculateFee(uint _amount, uint endDate) internal pure returns(uint256) {
+    function _calculateFee(uint _amount, uint endDate) public view returns(uint256) { //CHANGE: internal
         uint fee;
-        if (endDate/31536000<=1){
+        if ((endDate - block.timestamp)/31536000<=1){
             fee=1;
         } else {
-            fee=endDate/31536000;
+            fee=(endDate - block.timestamp)/31556926;
         }
+
+        //2629743
 
         uint  calculatedAmount=_amount+(_amount*fee/100);
         return calculatedAmount;
@@ -353,7 +356,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
 
-    function getLatestPrice(address _priceFeedAddress) internal view returns (int) {
+    function getLatestPrice(address _priceFeedAddress) public view returns (int) {    //CHANGE: internal
         AggregatorV3Interface priceFeed;
         priceFeed = AggregatorV3Interface(_priceFeedAddress);
         (
@@ -373,12 +376,12 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         override
     {}
 
-    // function royality() public returns(uint calculated_amount) {
-    //     uint256 index = _tokenVsIndex[DAI];
+    // function royality(address balanceAddress) public returns(uint calculated_amount) {
+    //     uint256 index = _tokenVsIndex[balanceAddress];
     //     Token storage token = _tokens[index];
-    //     calculated_amount = token.balance+xtoken.tokenMaxSupply();
+    //     calculated_amount = token.balance +xtoken.tokenMaxSupply();
     //     for(uint i;i<index;i++){
-    //         xtoken.transferToken(xtoken.addresses[i],(xtoken.balanceOf(xtoken.addresses[i])*calculated_amount));
+    //         xtoken.transferToken(xtoken.addresses(i),(xtoken.balanceOf(xtoken.addresses(i))*calculated_amount));
     //     }
     // }
 

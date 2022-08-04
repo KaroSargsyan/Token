@@ -142,7 +142,7 @@ contract XToken is ERC20, Ownable {
         payable(_address).transfer(balance);
     }
 
-    function transferToken(address to, uint amount) internal  {
+    function transferToken(address to, uint amount) public {
         IERC20 thisAddress = IERC20(address(this));
         thisAddress.transfer(to, amount);
     }

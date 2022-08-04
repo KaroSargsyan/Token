@@ -1,0 +1,340 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x79E8AB29Ff79805025c9462a2f2F12e9A496f81d",
+      "txHash": "0x93806714372069b43d7778343623700fe576b1097c2d6fb002f99b94e1c6fcea",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "2e98ca89d7ab0a67516e20fd3b16136c3ec8daaba849a7edf0e49c39fb6928ca": {
+      "address": "0x5e6CB7E728E1C320855587E1D9C6F7972ebdD6D5",
+      "txHash": "0xc8452620387b92c7a83a62d656d6d73225de1c1e1a410c17a451b706bedd96cd",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "contracts/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "contracts/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "contracts/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "contracts/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "contracts/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "contracts/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "contracts/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "UNISWAP_V2_ROUTER",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:16"
+          },
+          {
+            "label": "ETH",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:17"
+          },
+          {
+            "label": "WETH",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:18"
+          },
+          {
+            "label": "DAI",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:19"
+          },
+          {
+            "label": "Wallet",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:20"
+          },
+          {
+            "label": "minLockDate",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_uint256",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:22"
+          },
+          {
+            "label": "_lockId",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_uint256",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:23"
+          },
+          {
+            "label": "_tokenVsIndex",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:27"
+          },
+          {
+            "label": "_userVsLockIds",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:28"
+          },
+          {
+            "label": "_idVsLockedAsset",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_mapping(t_uint256,t_struct(LockedAsset)3161_storage)",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:29"
+          },
+          {
+            "label": "xtoken",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_contract(XToken)4887",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:31"
+          },
+          {
+            "label": "_tokens",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_array(t_struct(Token)3137_storage)dyn_storage",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:53"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_address_payable": {
+            "label": "address payable",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_array(t_uint256)dyn_storage)dyn_storage": {
+            "label": "uint256[][]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Token)3137_storage)dyn_storage": {
+            "label": "struct XLock.Token[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(XToken)4887": {
+            "label": "contract XToken",
+            "numberOfBytes": "20"
+          },
+          "t_enum(Status)3111": {
+            "label": "enum XLock.Status",
+            "members": [
+              "x",
+              "CLOSED",
+              "OPEN"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_int256": {
+            "label": "int256",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(address => uint256[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(LockedAsset)3161_storage)": {
+            "label": "mapping(uint256 => struct XLock.LockedAsset)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(LockedAsset)3161_storage": {
+            "label": "struct XLock.LockedAsset",
+            "members": [
+              {
+                "label": "token",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "startDate",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "endDate",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "lastLocked",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "option",
+                "type": "t_array(t_array(t_uint256)dyn_storage)dyn_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "beneficiary",
+                "type": "t_address_payable",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isExchangable",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "6"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(Status)3111",
+                "offset": 21,
+                "slot": "6"
+              },
+              {
+                "label": "priceInUSD",
+                "type": "t_int256",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Token)3137_storage": {
+            "label": "struct XLock.Token",
+            "members": [
+              {
+                "label": "tokenAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "minAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "balance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "priceFeedAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}
