@@ -175,15 +175,19 @@ describe("Lock", function () {
   
       await wbtc.connect(dai_whale).approve(xlock_contract.address, 1550)
   
-      await xlock_contract.connect(dai_whale).deposit( WBTC, 1000, 1743743187, [[2, 100]], dai_whale.address, false)
-  
-      console.log("_lockId is", await xlock_contract._lockId())
-  
-      console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0))
+      await xlock_contract.connect(dai_whale).deposit( WBTC, 1000, 1743743187, [[2, 40], [3, 60]], dai_whale.address, false)
 
-      console.log("claimable", await xlock_contract.claimable(0))
+      await xlock_contract.claim(0, ETH)
+  
+      // console.log("_lockId is", await xlock_contract._lockId())
+  
+      // console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0))
+
+      // console.log("claimable", await xlock_contract.claimable(0))
 
       console.log(await xlock_contract.getLockedAsset(0))
+
+      console.log("EVENT", await xlock_contract._eventIs(0))
       // await xlock_contract.claim(0, ETH)
       
       assert(5 === 5)

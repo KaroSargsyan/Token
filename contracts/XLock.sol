@@ -92,7 +92,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         uint256 lastLocked,
         bool isExchangable,
         Status status,
-        uint[][] memory,
+        uint[][] memory option,
         int priceInUSD
     )
     {
@@ -105,7 +105,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         lastLocked = asset.lastLocked;
         status=asset.status;
         isExchangable=asset.isExchangable;
-        uint [][] memory option  = asset.option;
+        option  = asset.option;
 
         return(
             token,
@@ -244,7 +244,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     function claimable(uint256 id) public view returns(bool _claimable){   //CHANGE: internal
         LockedAsset memory asset = _idVsLockedAsset[id];
         require(asset.status == Status.OPEN,"Asset is closed");
-        if( asset.endDate <= block.timestamp /*|| _eventIs(id)*/) {        //CHANGE: uncomment
+        if( (asset.endDate <= block.timestamp) || _eventIs(id)) {        //CHANGE: uncomment
             return true;
         }
     }
@@ -261,13 +261,27 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         ) = getToken(asset.token); 
         int oraclePrice = getLatestPrice(_priceFeedAddress);
 
-        if (newAmount>=oraclePrice){
+        if (oraclePrice >= newAmount){
 
             return true;
         } else {
             return false;
         }
     } 
+
+
+    //     function _eventIs(uint id) public view returns(int){ //CHANGE: internal
+    //     LockedAsset memory asset = _idVsLockedAsset[id];
+    //     int newAmount = asset.priceInUSD*int(asset.option[0][0]);
+    //     (
+    //         /*address tokenAddress*/,
+    //         /*uint256 minAmount*/,
+    //         /*uint balance*/,
+    //         address _priceFeedAddress
+    //     ) = getToken(asset.token); 
+    //     // int oraclePrice = getLatestPrice(_priceFeedAddress);
+    //     return newAmount;
+    // }
 
 
     function _calculateFee(uint _amount, uint endDate) public view returns(uint256) { //CHANGE: internal
