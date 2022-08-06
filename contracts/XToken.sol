@@ -129,7 +129,6 @@ contract XToken is ERC20, Ownable {
         return true;
     }
 
-
     function approve(address spender, uint256 amount) public virtual override _lock(amount) returns (bool) {
         address owner = _msgSender();
         _approve(owner, spender, amount);

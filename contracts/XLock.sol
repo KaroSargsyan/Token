@@ -59,7 +59,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         minLockDate = 1 ;
         UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
         ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
-        WETH = 0xc778417E063141139Fce010982780140Aa0cD5Ab;
+        WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
         DAI = 0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658;
         Wallet = 0x0aB61E7C46C6C682C8fC72E110Edf69699DAA8D2;
         xtoken = XToken(addr);
@@ -177,18 +177,18 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
 
-    function swapTokenBalance(
-        address tokenIn, 
-        address tokenOut
-    ) 
-        public payable onlyOwner 
-    {
-        uint256 index = _tokenVsIndex[tokenIn]; 
-        Token storage token = _tokens[index];
-        uint swapingAmount=token.balance;
-        token.balance = 0;
-        swap(tokenIn, tokenOut, swapingAmount, Wallet);
-    }
+    // function swapTokenBalance(
+    //     address tokenIn, 
+    //     address tokenOut
+    // ) 
+    //     public payable onlyOwner 
+    // {
+    //     uint256 index = _tokenVsIndex[tokenIn]; 
+    //     Token storage token = _tokens[index];
+    //     uint swapingAmount=token.balance;
+    //     token.balance = 0;
+    //     swap(tokenIn, tokenOut, swapingAmount, Wallet);
+    // }
 
 
     function withdraw(address tokenAddress, address _receiver) public payable onlyOwner {  //CHANGE remove: address _receiver
@@ -208,7 +208,6 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     function claim(uint256 id, address SWAPTOKEN ) public payable canClaim(id) {
         LockedAsset storage asset = _idVsLockedAsset[id];
         uint newAmount=((asset.amount*asset.option[0][1])/100);
-        console.log("1111111111111111111111111111");
         for(uint i = 0; i < asset.option.length-1; i++){
             asset.option[i] = asset.option[i+1];      
         }
@@ -225,7 +224,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             }
         } else {
             if (asset.isExchangable){
-                swap(asset.token, SWAPTOKEN, newAmount, asset.beneficiary);
+                console.log("1111111111111111111111111111");
+                swap(asset.token, SWAPTOKEN, newAmount, asset.beneficiary);  //CHANGE: remove 0
             } else {
                 console.log("22222222222222222222");
                 ERC20Upgradeable(asset.token).transfer(asset.beneficiary, newAmount);
@@ -320,7 +320,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 block.timestamp
             );
         } else {
-    
+            console.log("aaaaaaaaaaaaaaaaaaaaaaa");
             ERC20Upgradeable(_tokenIn).approve(UNISWAP_V2_ROUTER, _amountIn);
             uint amountOutMin = getAmountOutMin(_tokenIn, _tokenOut, _amountIn);
             address[] memory path;
@@ -334,28 +334,41 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 path[0] = _tokenIn;
                 path[1] = WETH;
                 path[2] = _tokenOut;
-            }        
-            
+            }
+
+            console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", ERC20Upgradeable(_tokenIn).allowance(address(this), UNISWAP_V2_ROUTER));
+        
+            console.log("_amountIn", _amountIn);
+            console.log("_amountOutMin", amountOutMin);
+            // console.log("path", path);
+            console.log("_to", _to);
+
+
+
             IUniswapV2Router01(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
                 _amountIn,
-                amountOutMin,
+                amountOutMin,  
                 path,
                 _to,
                 block.timestamp
             );
+            console.log("cccccccccccccccccccccccc");
+
         }
     }
 
 
-    function getAmountOutMin(
+    function getAmountOutMin(         //CHANGE: remove 
         address _tokenIn,
         address _tokenOut,
         uint256 _amountIn
     ) 
-        internal view returns (uint256) 
+        public view returns (uint256) 
     {
         address[] memory path;
         if (_tokenIn == WETH || _tokenOut == WETH) {
+            console.log("geeeeeeeet");
+
             path = new address[](2);
             path[0] = _tokenIn;
             path[1] = _tokenOut;
@@ -365,8 +378,10 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             path[1] = WETH;
             path[2] = _tokenOut;
         }
-
+        console.log("geeeeeeeet22222222222222222");
         uint256[] memory amountOutMins = IUniswapV2Router01(UNISWAP_V2_ROUTER).getAmountsOut(_amountIn,path);
+        console.log("geeeeeeeet33333333333333333333333");
+
         return amountOutMins[path.length -1]; 
     }
 
