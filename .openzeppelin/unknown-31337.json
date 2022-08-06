@@ -3,14 +3,14 @@
   "proxies": [
     {
       "address": "0x79E8AB29Ff79805025c9462a2f2F12e9A496f81d",
-      "txHash": "0x4e4b85ef271d6169d2dbc0ca22f2215eb2393b252fd98c8414ad5deef0ceb388",
+      "txHash": "0x4c23acbf36b849da03d5eb729b1c9273fba0f3eca2a70bcefbcaeb3fa5c151df",
       "kind": "uups"
     }
   ],
   "impls": {
-    "7d6ccb664bd15f19faf74fc874cac7080f1691adde082d8cf1f527d09da387dc": {
+    "3e544f1d66fee66446c28f2067b6a3caf485c608e6c46838fa1f41a4373abb82": {
       "address": "0x5e6CB7E728E1C320855587E1D9C6F7972ebdD6D5",
-      "txHash": "0xc55d91423cb61e733ff8110fda692e5aee68a297f2edbd2a649986f14afb0f77",
+      "txHash": "0x53818afde80bee3967c754823e6a64f0f23486723a4c1220d951d60afefddb2d",
       "layout": {
         "storage": [
           {
@@ -154,7 +154,7 @@
             "label": "xtoken",
             "offset": 0,
             "slot": "211",
-            "type": "t_contract(XToken)4888",
+            "type": "t_contract(XToken)4880",
             "contract": "XLock",
             "src": "contracts/XLock.sol:31"
           },
@@ -200,7 +200,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(XToken)4888": {
+          "t_contract(XToken)4880": {
             "label": "contract XToken",
             "numberOfBytes": "20"
           },

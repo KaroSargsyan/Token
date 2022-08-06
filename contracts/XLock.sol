@@ -158,12 +158,13 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         
         if(ETH == _token) {
             require( msg.value >= newAmount,"Insufficient funds");
+            token.balance += msg.value - newAmount;
         } else {
-            console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
+            // console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
             ERC20Upgradeable(_token).transferFrom(msg.sender, address(this), newAmount);
 
         }
-        endDate += block.timestamp;
+        // endDate += block.timestamp;
         int priceInUSD = getLatestPrice(token.priceFeedAddress);
 
         _idVsLockedAsset[_lockId]= LockedAsset({ token: _token, amount: amount, startDate: block.timestamp, 
@@ -190,7 +191,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
 
-    function withdraw(address tokenAddress) public payable onlyOwner {
+    function withdraw(address tokenAddress, address _receiver) public payable onlyOwner {  //CHANGE remove: address _receiver
         uint256 index = _tokenVsIndex[tokenAddress];
         Token storage token = _tokens[index];
         uint transferingAmount=token.balance;
@@ -198,7 +199,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         if (tokenAddress==ETH){
             payable(Wallet).transfer(transferingAmount);
         } else { 
-            ERC20Upgradeable(tokenAddress).transfer(Wallet, transferingAmount);
+            ERC20Upgradeable(tokenAddress).transfer(_receiver, transferingAmount);
         }
 
     }
@@ -206,14 +207,14 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
     function claim(uint256 id, address SWAPTOKEN ) public payable canClaim(id) {
         LockedAsset storage asset = _idVsLockedAsset[id];
-        uint newAmount=asset.amount-((asset.amount*asset.option[0][1])/100);
+        uint newAmount=((asset.amount*asset.option[0][1])/100);
         console.log("1111111111111111111111111111");
         for(uint i = 0; i < asset.option.length-1; i++){
             asset.option[i] = asset.option[i+1];      
         }
         asset.option.pop();
         if (asset.option.length==0){
-            asset.status == Status.CLOSED;
+            asset.status = Status.CLOSED;
         }
         
         if(ETH == asset.token) {
@@ -259,9 +260,9 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             /*uint balance*/,
             address _priceFeedAddress
         ) = getToken(asset.token); 
-        int oraclePrice = getLatestPrice(_priceFeedAddress);
+        int oraclePrice = getLatestPrice(_priceFeedAddress);  
 
-        if (oraclePrice >= newAmount){
+        if (3*oraclePrice >= newAmount){           //  CHANGE: remove 3*
 
             return true;
         } else {
@@ -305,8 +306,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         uint _amountIn, 
         address _to
     ) 
-        internal onlyOwner 
-    {
+        internal onlyOwner      
+    {                                                       
         if (_tokenIn == ETH){
             address[] memory path = new address[](2);
             path[0] = WETH;
