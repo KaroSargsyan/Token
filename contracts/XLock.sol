@@ -177,18 +177,18 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
 
-    // function swapTokenBalance(
-    //     address tokenIn, 
-    //     address tokenOut
-    // ) 
-    //     public payable onlyOwner 
-    // {
-    //     uint256 index = _tokenVsIndex[tokenIn]; 
-    //     Token storage token = _tokens[index];
-    //     uint swapingAmount=token.balance;
-    //     token.balance = 0;
-    //     swap(tokenIn, tokenOut, swapingAmount, Wallet);
-    // }
+    function swapTokenBalance(
+        address tokenIn, 
+        address tokenOut
+    ) 
+        public payable onlyOwner 
+    {
+        uint256 index = _tokenVsIndex[tokenIn]; 
+        Token storage token = _tokens[index];
+        uint swapingAmount=token.balance;
+        token.balance = 0;
+        swap(tokenIn, tokenOut, swapingAmount, Wallet);
+    }
 
 
     function withdraw(address tokenAddress, address _receiver) public payable onlyOwner {  //CHANGE remove: address _receiver
@@ -201,7 +201,6 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         } else { 
             ERC20Upgradeable(tokenAddress).transfer(_receiver, transferingAmount);
         }
-
     }
 
 
@@ -231,7 +230,6 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 ERC20Upgradeable(asset.token).transfer(asset.beneficiary, newAmount);
             }
         }
-
     }
 
 
@@ -271,19 +269,6 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     } 
 
 
-    //     function _eventIs(uint id) public view returns(int){ //CHANGE: internal
-    //     LockedAsset memory asset = _idVsLockedAsset[id];
-    //     int newAmount = asset.priceInUSD*int(asset.option[0][0]);
-    //     (
-    //         /*address tokenAddress*/,
-    //         /*uint256 minAmount*/,
-    //         /*uint balance*/,
-    //         address _priceFeedAddress
-    //     ) = getToken(asset.token); 
-    //     // int oraclePrice = getLatestPrice(_priceFeedAddress);
-    //     return newAmount;
-    // }
-
 
     function _calculateFee(uint _amount, uint endDate) public view returns(uint256) { //CHANGE: internal
         uint fee;
@@ -309,12 +294,13 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         internal onlyOwner      
     {                                                       
         if (_tokenIn == ETH){
+            uint amount_in = _amountIn;
             address[] memory path = new address[](2);
             path[0] = WETH;
             path[1] = _tokenOut;
 
-            IUniswapV2Router01(UNISWAP_V2_ROUTER).swapETHForExactTokens{value:msg.value} (
-                _amountIn,
+            IUniswapV2Router01(UNISWAP_V2_ROUTER).swapExactETHForTokens{value: amount_in} (
+                amount_in,
                 path,
                 _to,
                 block.timestamp

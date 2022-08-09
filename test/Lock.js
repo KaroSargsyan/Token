@@ -340,18 +340,20 @@ describe("Lock", function () {
       xlock_contract.addToken(ETH, amount, pricefeed_eth)
   
       await xlock_contract.connect(dai_whale).deposit( ETH, amount, 1743743187, [[2, 50], [2, 50]], thirdOne.address, true, options)
-  
-      console.log("_lockId is", await xlock_contract._lockId())
-  
+    
       console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0))
 
-      //  CHANGE: remove 3*
-      await xlock_contract.claim(0, LINK, {value: ethers.utils.parseUnits('5', 'ether')})
+      console.log("xlock_contract Balance of ETH before: ", await ethers.provider.getBalance(xlock_contract.address))
+
+      console.log("Third Dai BEFORE", await dai.balanceOf(thirdOne.address))
+
+      await xlock_contract.claim(0, DAI)
 
 
       console.log("ETH toekn info: ", await xlock_contract.getToken(ETH))
-      console.log("xlock_contract Balance of ETH: ", await ethers.provider.getBalance(xlock_contract.address))
+      console.log("xlock_contract Balance of ETH after: ", await ethers.provider.getBalance(xlock_contract.address))
       console.log("ThirdOne Balance of ETH: ", await ethers.provider.getBalance(thirdOne.address))
+      console.log("Third Dai AFTER", await dai.balanceOf(thirdOne.address))
 
       // Airdrop Check
       // console.log("Xcoin of whale address", await xtoken_contract.balanceOf(dai_whale.address))
@@ -360,7 +362,7 @@ describe("Lock", function () {
 
     })
 
-    it('should swap properly deposited amounts not ETH', async () => {
+    // it('should swap properly deposited amounts not ETH', async () => {
       // const {xlock_contract, dai_whale, beneficary, thirdOne} = await loadFixture(deployTokenFixture);
       // const amount = ethers.BigNumber.from('3000000000000000000')
       // const amoun_to_deposit = ethers.BigNumber.from("2000000000000000000")
@@ -384,9 +386,9 @@ describe("Lock", function () {
       // console.log("beneficary DAI", await dai.balanceOf(beneficary.address))
 
 
-      assert(5 === 5)
+      // assert(5 === 5)
 
-    })
+    // })
 
     it('should swap properly deposited amounts not ETH', async () => {
       // const {xlock_contract, dai_whale, beneficary, thirdOne} = await loadFixture(deployTokenFixture);
@@ -399,6 +401,20 @@ describe("Lock", function () {
       // console.log("MINIMUM AMOUNT", await xlock_contract.getAmountOutMin(LINK, DAI, amount))
 
       // assert(5 === 5)
+
+    })
+
+    it("Check receive function", async () => {
+      const {XLock, xtoken_contract, xlock_contract, dai_whale, thirdOne} = await loadFixture(deployTokenFixture);
+      console.log("xlock_contract Balance of ETH before: ", await ethers.provider.getBalance(xlock_contract.address))
+
+      let tx = {
+        to: xlock_contract.address,
+        // Convert currency unit from ether to wei
+        value: ethers.utils.parseEther('55')
+    }
+      await owner.sendTransaction(tx)
+      console.log("xlock_contract Balance of ETH after: ", await ethers.provider.getBalance(xlock_contract.address))
 
     })
   })
