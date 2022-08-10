@@ -117,6 +117,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         status=asset.status;
         isExchangable=asset.isExchangable;
         option  = asset.option;
+        priceInUSD = asset.priceInUSD;
+
 
         return(
             token,
@@ -271,7 +273,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         ) = getToken(asset.token); 
         int oraclePrice = getLatestPrice(_priceFeedAddress);  
 
-        if (3*oraclePrice >= newAmount){           //  CHANGE: remove 3*
+        if (5*oraclePrice >= newAmount){           //  CHANGE: remove 3*
 
             return true;
         } else {
