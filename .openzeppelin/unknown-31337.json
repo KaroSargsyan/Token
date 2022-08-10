@@ -18,14 +18,14 @@
     },
     {
       "address": "0x95775fD3Afb1F4072794CA4ddA27F2444BCf8Ac3",
-      "txHash": "0xb4eda998e18142a0993dd528687aceb707fe7a2de2da4b8b9cdb89a4d064ee7c",
+      "txHash": "0x9e2294862153f9974a12ae1b0278bd717eb2128fd63b96202b3d496831fe2412",
       "kind": "uups"
     }
   ],
   "impls": {
     "354056be4212e20f82ebbfb215f0fb38d89d41d89101ff2d0b341e29791527ed": {
       "address": "0xeAd789bd8Ce8b9E94F5D0FCa99F8787c7e758817",
-      "txHash": "0x264f58c34fe9a2e70ef1b94f8edff909c407cc08b503588080c42c653386aaa3",
+      "txHash": "0x3841935c14a29c4cac2e487a171d24617938385102749d78ab13e5063e30a77d",
       "layout": {
         "storage": [
           {
