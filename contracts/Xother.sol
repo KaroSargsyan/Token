@@ -4,14 +4,14 @@ pragma solidity ^0.8.9;
 
 import "./ERC20Upgradeable.sol";
 import "./OwnableUpgradeable.sol";
-import "./Initializable.sol";
-import "./UUPSUpgradeable.sol";
+// import "./Initializable.sol";
+// import "./UUPSUpgradeable.sol";
 import "./IUniswapV2Router01.sol";
 import "./AggregatorV3Interface.sol";
 import "./XToken.sol";
 import "hardhat/console.sol";
 
-contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
+contract Xother is OwnableUpgradeable {
     
     address private  UNISWAP_V2_ROUTER ;
     address private  ETH ;
@@ -30,10 +30,9 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
     //REMOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE PART <<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-    // address public sss = address(loc);
-    // function removeLoc() view public returns(address){
-    //     return sss;
-    // }
+    function newFunc() pure public returns(uint){
+        return 55555555555555;
+    }
 
 
 
@@ -64,17 +63,17 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     Token[] private _tokens;
     
     
-    function initialize(address addr) initializer public {
-        __Ownable_init();
-        __UUPSUpgradeable_init();
-        minLockDate = 1 ;
-        UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-        ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
-        WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-        DAI = 0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658;
-        Wallet = 0x0aB61E7C46C6C682C8fC72E110Edf69699DAA8D2;
-        xtoken = XToken(addr);
-    }
+    // function initialize(address addr) initializer public {
+    //     __Ownable_init();
+    //     __UUPSUpgradeable_init();
+    //     minLockDate = 1 ;
+    //     UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+    //     ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    //     WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+    //     DAI = 0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658;
+    //     Wallet = 0x0aB61E7C46C6C682C8fC72E110Edf69699DAA8D2;
+    //     xtoken = XToken(addr);
+    // }
     
 
     receive() payable external {
@@ -397,11 +396,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
     //CHANGE: public
-    function _authorizeUpgrade(address newImplementation) 
-        internal                    
-        onlyOwner
-        override
-    {}
+    
 
     // function royality(address balanceAddress) public returns(uint calculated_amount) {
     //     uint256 index = _tokenVsIndex[balanceAddress];

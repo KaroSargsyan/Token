@@ -18,13 +18,19 @@ contract XToken is ERC20, Ownable {
     uint public calculated_amount;
     bool issent;
 
-    uint RoundsaleTotalAmount = 300;
+    uint public roundsaleTotalAmount = 300;
 
     XLock loc;
 
-
     mapping(uint256 => address) public addresses;
     mapping (address => uint) public indicis;
+
+//REMOVEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    address public sss = address(loc);
+    function removeLoc() view public returns(address){
+        return sss;
+    }
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     struct Round{
         uint roundNumber;
@@ -32,12 +38,12 @@ contract XToken is ERC20, Ownable {
         uint remainTokens;
     }
 
-    Round round;
+    Round public round;    //change to internal
 
     constructor() ERC20("XToken", "XTK") {
         _mint(address(this), tokenMaxSupply);
         addIndex(address(this));
-        round = Round(1, 1 ether ,RoundsaleTotalAmount);
+        round = Round(1, 1 ether , roundsaleTotalAmount);
         roundEndDate=block.timestamp+15555;
         // loc=XLock(payable(_addr));
     }
@@ -46,7 +52,8 @@ contract XToken is ERC20, Ownable {
         loc=XLock(payable(_addr));
     }
 
-    function getRoundInfo() public returns(uint,uint,uint){
+
+    function setRound() public {
         require(roundsisOver() == false, "Round is over");
         if (tokenSales < roundQuantity){
             round.roundNumber = 1;
@@ -59,21 +66,23 @@ contract XToken is ERC20, Ownable {
         }
         
         round.tokenPrice=round.roundNumber*0.00025 ether;
-        round.remainTokens= RoundsaleTotalAmount - tokenSales;
-        
+        round.remainTokens= roundsaleTotalAmount - tokenSales;
+    }
+
+    function getRoundInfo() public view returns(uint,uint,uint){
         return (round.roundNumber,round.tokenPrice,round.remainTokens);
     }
 
     function sendTokensToRewardPool() public {
         require(roundsisOver() == true, "Sale is open");
-        require(tokenSales <= RoundsaleTotalAmount, "Tokens are sold or exceed maximum selling limits");
+        require(tokenSales <= roundsaleTotalAmount, "Tokens are sold or exceed maximum selling limits");
         require(issent == false,"tokens already sent");
         issent=true;
-        rewardPoolTokens+=RoundsaleTotalAmount-tokenSales;
+        rewardPoolTokens += roundsaleTotalAmount-tokenSales;
     }
 
     function roundsisOver() public view returns(bool){
-            return block.timestamp>roundEndDate || tokenSales > RoundsaleTotalAmount ;
+            return block.timestamp>roundEndDate || tokenSales > roundsaleTotalAmount ;
     } 
 
     function getBalanceOfTokens() public view returns(uint balanceOfContract){
@@ -100,13 +109,17 @@ contract XToken is ERC20, Ownable {
         require(msg.value >= getPrice(_amount), "Your funds are not enough");
         uint amount = _amount * 10 ** decimals();
         tokenSales +=  _amount;
-        transferToken(msg.sender,amount);
+
+        IERC20 thisAddress = IERC20(address(this));
+        thisAddress.transfer(msg.sender, amount);
+
+        setRound();
     }
 
 // GET Price--------------------------------------------------------------------------------------
 
  function getPrice(uint amount) public view returns(uint){
-     require (RoundsaleTotalAmount - tokenSales >= amount, "Insert Valid Amount");
+     require (roundsaleTotalAmount - tokenSales >= amount, "Insert Valid Amount");
         uint dynamicPrice = 0.000000000000000001 ether;
         if (tokenSales < roundQuantity){
             if(amount + tokenSales < roundQuantity){
@@ -167,14 +180,14 @@ contract XToken is ERC20, Ownable {
         payable(_address).transfer(balance);
     }
 
-    function transferToken(address to, uint amount) public {
+    function transferToken(address to, uint amount) public{
         require(msg.sender == owner() || msg.sender == address(loc),"onlyOwner");
         IERC20 thisAddress = IERC20(address(this));
         thisAddress.transfer(to, amount);
     }
 
     function airdrop(address _addr,uint _amount) public {
-        require(msg.sender == owner() || msg.sender == address(loc),"onlyOwner");
+        require(msg.sender == owner() || msg.sender == address(loc),"onlyOwner XXXXX");  //CHANGE: 
         require( rewardPoolTokens >= rewardSended,"rewardPoolTokens is transfered");
         uint amount = _amount * 10 ** decimals();
         rewardSended += amount;
@@ -186,18 +199,17 @@ contract XToken is ERC20, Ownable {
         _;
     }
 
-    function lock(uint amount) internal view returns(bool locked){
+    function lock(uint amount) public view returns(bool locked){     //CHANGE: internal
         // if ((msg.sender == address(this) || tx.origin == address(this)) && loc.lockedAssetQty() == true) {
         if (msg.sender == address(this) || tx.origin == address(this)) {
-            if((balanceOf(address(this)) - amount < lockedTokens) && (loc.lockedAssetQty() == false)) {    //add timestamp
+            if((balanceOf(address(this)) - amount < lockedTokens) && (loc.lockedAssetQty() == true)) {    //add timestamp
                 return false;
-            }       
-        }
+            }     
+        } 
         return true;
     }
 
     function test() public view returns(bool){
        return loc.lockedAssetQty();
     }
-
 }

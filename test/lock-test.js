@@ -39,10 +39,10 @@ describe("Lock", function () {
   async function deployTokenFixture(){
     [owner, beneficary, thirdOne] = await ethers.getSigners()
     dai_whale = await ethers.getImpersonatedSigner(DAI_WHALE);  // Impersonate any account
-    dai = await ethers.getContractAt("IERC20", DAI)
-    wbtc = await ethers.getContractAt("IERC20", WBTC)
-    link = await ethers.getContractAt("IERC20", LINK)   
-    weth = await ethers.getContractAt("IERC20", WETH)    
+    dai = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", DAI)  //or contracts/IERC20.sol:IERC20
+    wbtc = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", WBTC)
+    link = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", LINK)   
+    weth = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", WETH)    
 
     const XLock = await ethers.getContractFactory("XLock", owner)
 
@@ -52,6 +52,8 @@ describe("Lock", function () {
     await xtoken_contract.deployed()
     
     const xlock_contract = await hre.upgrades.deployProxy(XLock, [xtoken_contract.address], {kind: 'uups'})
+
+    await xtoken_contract.initLock(xlock_contract.address)   //give XLock address to XLock contract 
 
     console.log("Xtoken Deployed AT", xtoken_contract.address)
 
@@ -68,8 +70,6 @@ describe("Lock", function () {
     // console.log(await xlock_contract.getToken(DAI))
     assert(5 === 5)
   })
-
-
 
   // describe('Deposit', () => {
 
@@ -329,8 +329,10 @@ describe("Lock", function () {
     // })
 
     it('should swap properly deposited amounts ETH only', async () => {
+      
 
       const {XLock, xtoken_contract, xlock_contract, dai_whale, thirdOne} = await loadFixture(deployTokenFixture);
+
       console.log('xlock_contract address is:  ', xlock_contract.address)
       
       let amount = ethers.BigNumber.from('3000000000000000000')
