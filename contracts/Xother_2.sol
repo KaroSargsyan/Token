@@ -4,14 +4,14 @@ pragma solidity ^0.8.9;
 
 import "./ERC20Upgradeable.sol";
 import "./OwnableUpgradeable.sol";
-// import "./Initializable.sol";
-// import "./UUPSUpgradeable.sol";
+import "./Initializable.sol";
+import "./UUPSUpgradeable.sol";
 import "./IUniswapV2Router01.sol";
 import "./AggregatorV3Interface.sol";
 import "./XToken.sol";
 import "hardhat/console.sol";
 
-contract Xother is OwnableUpgradeable {
+contract Xother2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     
     address private  UNISWAP_V2_ROUTER ;
     address private  ETH ;
@@ -30,10 +30,9 @@ contract Xother is OwnableUpgradeable {
 
     //REMOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE PART <<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-    function newFunc() pure public returns(uint){
-        return 55555555555555;
+      function newFunc() pure public returns(uint){
+        return 2222222222222222222;
     }
-
 
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -396,7 +395,11 @@ contract Xother is OwnableUpgradeable {
     }
 
     //CHANGE: public
-    
+    function _authorizeUpgrade(address newImplementation) 
+        internal                    
+        onlyOwner
+        override
+    {}
 
     // function royality(address balanceAddress) public returns(uint calculated_amount) {
     //     uint256 index = _tokenVsIndex[balanceAddress];

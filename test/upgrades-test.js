@@ -60,13 +60,32 @@ const {
     assert(5 === 5)
 
     describe("Should be updated to", () => {
-      it('Should be updated',async () => {
-        const {XLock, xtoken_contract, xlock_contract} = await loadFixture(deployTokenFixture);
-        console.log(xlock_contract.address)
-        const other_contract = await ethers.getContractFactory("Xother")
-        await upgrades.upgradeProxy(xlock_contract.address, other_contract) 
+    //   it('Should be updated Xother1',async () => {
+    //     const {XLock, xtoken_contract, xlock_contract} = await loadFixture(deployTokenFixture);
+    //     const Other = await ethers.getContractFactory("Xother1")
+    //     const other_contract = await upgrades.upgradeProxy(xlock_contract.address, Other) 
+        
+    //     console.log("other_contract ADDRESS", other_contract.address)
+    //     console.log("NEW FUNCTIONALITY",await  other_contract.newFunc())
 
-    })    
+    // })   
+
+    it('Should be updated Xother2',async () => {
+      const {XLock, xtoken_contract, xlock_contract} = await loadFixture(deployTokenFixture);
+
+      xlock_contract.addToken(DAI, 250000000000000, pricefeed_dai)
+
+
+      const Other = await ethers.getContractFactory("Xother2")
+      const other_contract = await upgrades.upgradeProxy(xlock_contract.address, Other) 
+      
+      console.log("other_contract ADDRESS", other_contract.address)
+      console.log("proxy address", xlock_contract.address)
+      console.log("NEW FUNCTIONALITY",await  other_contract.newFunc())
+      console.log("NEW FUNCTIONALITY addToken",await  other_contract.addToken(DAI, 250000000000000, pricefeed_dai))
+
+
+  }) 
   })
 })
 })

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-
+//xxxxxxxxxxxxxxxxxxxxxxx
 import "./ERC20Upgradeable.sol";
 import "./OwnableUpgradeable.sol";
 import "./Initializable.sol";
@@ -117,6 +117,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         status=asset.status;
         isExchangable=asset.isExchangable;
         option  = asset.option;
+        priceInUSD = asset.priceInUSD;
+
 
         return(
             token,
@@ -163,7 +165,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 revert("Ops must be equal to 100"); 
             } 
             _totalprocent +=  option[i][1];
-        }
+        } 
         uint newAmount=_calculateFee(amount,endDate);
         token.balance+=newAmount-amount;
         
@@ -171,8 +173,11 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             require( msg.value >= newAmount,"Insufficient funds");
             token.balance += msg.value - newAmount;
         } else {
-            // console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
+            console.log("************************");
+            console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
             ERC20Upgradeable(_token).transferFrom(msg.sender, address(this), newAmount);
+            console.log("---------------------------");
+
 
         }
         // endDate += block.timestamp;
@@ -234,10 +239,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             }
         } else {
             if (asset.isExchangable){
-                console.log("1111111111111111111111111111");
                 swap(asset.token, SWAPTOKEN, newAmount, asset.beneficiary);  //CHANGE: remove 0
             } else {
-                console.log("22222222222222222222");
                 ERC20Upgradeable(asset.token).transfer(asset.beneficiary, newAmount);
             }
         }
@@ -254,7 +257,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     function claimable(uint256 id) public view returns(bool _claimable){   //CHANGE: internal
         LockedAsset memory asset = _idVsLockedAsset[id];
         require(asset.status == Status.OPEN,"Asset is closed");
-        if( (asset.endDate <= block.timestamp) || _eventIs(id)) {        //CHANGE: uncomment
+        if( (asset.endDate <= block.timestamp) || _eventIs(id)) {        
             return true;
         }
     }
@@ -271,7 +274,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         ) = getToken(asset.token); 
         int oraclePrice = getLatestPrice(_priceFeedAddress);  
 
-        if (3*oraclePrice >= newAmount){           //  CHANGE: remove 3*
+        if (5*oraclePrice >= newAmount){           //  CHANGE: remove 3*
 
             return true;
         } else {
@@ -317,7 +320,6 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 block.timestamp
             );
         } else {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaa");
             ERC20Upgradeable(_tokenIn).approve(UNISWAP_V2_ROUTER, _amountIn);
             uint amountOutMin = getAmountOutMin(_tokenIn, _tokenOut, _amountIn);
             address[] memory path;
@@ -333,12 +335,12 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 path[2] = _tokenOut;
             }
 
-            console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", ERC20Upgradeable(_tokenIn).allowance(address(this), UNISWAP_V2_ROUTER));
+            // console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", ERC20Upgradeable(_tokenIn).allowance(address(this), UNISWAP_V2_ROUTER));
         
-            console.log("_amountIn", _amountIn);
-            console.log("_amountOutMin", amountOutMin);
-            // console.log("path", path);
-            console.log("_to", _to);
+            // console.log("_amountIn", _amountIn);
+            // console.log("_amountOutMin", amountOutMin);
+            // // console.log("path", path);
+            // console.log("_to", _to);
 
 
 
@@ -349,8 +351,6 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 _to,
                 block.timestamp
             );
-            console.log("cccccccccccccccccccccccc");
-
         }
     }
 
@@ -364,7 +364,6 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     {
         address[] memory path;
         if (_tokenIn == WETH || _tokenOut == WETH) {
-            console.log("geeeeeeeet");
 
             path = new address[](2);
             path[0] = _tokenIn;
@@ -375,9 +374,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             path[1] = WETH;
             path[2] = _tokenOut;
         }
-        console.log("geeeeeeeet22222222222222222");
         uint256[] memory amountOutMins = IUniswapV2Router01(UNISWAP_V2_ROUTER).getAmountsOut(_amountIn,path);
-        console.log("geeeeeeeet33333333333333333333333");
 
         return amountOutMins[path.length -1]; 
     }
