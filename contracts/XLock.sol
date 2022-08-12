@@ -257,7 +257,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     function claimable(uint256 id) public view returns(bool _claimable){   //CHANGE: internal
         LockedAsset memory asset = _idVsLockedAsset[id];
         require(asset.status == Status.OPEN,"Asset is closed");
-        if( (asset.endDate <= block.timestamp) || _eventIs(id)) {        //CHANGE: uncomment
+        if( (asset.endDate <= block.timestamp) || _eventIs(id)) {        
             return true;
         }
     }
