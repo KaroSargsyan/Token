@@ -55,28 +55,28 @@ const {
       return {xcoin, owner, beneficary, thirdOne, XLock, xtoken_contract, xlock_contract, dai_whale, pricefeed_dai}
     }
 
-    describe("XToken manipulations", () => {
+    // describe("XToken manipulations", () => {
 
-      it('Should add a token',async () => {
-          const {XLock, xtoken_contract, xlock_contract, pricefeed_dai} = await loadFixture(deployTokenFixture);
-          console.log("Should add a token")
-          console.log('xlock_contract address is:  ', xlock_contract.address)
-          xlock_contract.addToken(DAI, 250000000000000, pricefeed_dai)
-          // console.log(await xlock_contract.getToken(DAI))
-          assert(5 === 5)
-        })
+    //   it('Should add a token',async () => {
+    //       const {XLock, xtoken_contract, xlock_contract, pricefeed_dai} = await loadFixture(deployTokenFixture);
+    //       console.log("Should add a token")
+    //       console.log('xlock_contract address is:  ', xlock_contract.address)
+    //       xlock_contract.addToken(DAI, 250000000000000, pricefeed_dai)
+    //       // console.log(await xlock_contract.getToken(DAI))
+    //       assert(5 === 5)
+    //     })
       
-      it("Should give proper data about Token", async () => {
-          const {XLock, xtoken_contract, xlock_contract, pricefeed_dai} = await loadFixture(deployTokenFixture);
-          console.log("totalSupply: ", await xtoken_contract.totalSupply())
-          console.log("Name of Token: ", await xtoken_contract.name())  
-          await xtoken_contract.initLock(xlock_contract.address)
-          console.log("Function Test: ", await xtoken_contract.test())
-          console.log("Get Round Info Directly: ", await xtoken_contract.round()) 
-          // const mint = await xtoken_contract.Buy(coinsWantToBuy, options)
-          console.log("Get Round Info: ", await xtoken_contract.getRoundInfo())
-      })
-    })
+    //   it("Should give proper data about Token", async () => {
+    //       const {XLock, xtoken_contract, xlock_contract, pricefeed_dai} = await loadFixture(deployTokenFixture);
+    //       console.log("totalSupply: ", await xtoken_contract.totalSupply())
+    //       console.log("Name of Token: ", await xtoken_contract.name())  
+    //       await xtoken_contract.initLock(xlock_contract.address)
+    //       console.log("Function Test: ", await xtoken_contract.test())
+    //       console.log("Get Round Info Directly: ", await xtoken_contract.round()) 
+    //       // const mint = await xtoken_contract.Buy(coinsWantToBuy, options)
+    //       console.log("Get Round Info: ", await xtoken_contract.getRoundInfo())
+    //   })
+    // })
 
 
     describe("BUY, LOCK, REWARD", () => {
@@ -84,63 +84,66 @@ const {
       it("'BUY' works properly", async ()=> {
         const {xtoken_contract, xlock_contract, pricefeed_dai} = await loadFixture(deployTokenFixture);
                 
-        const coinsWantToBuy = 10
+        const coinsWantToBuy = 20
         let x = 30
         while (x) {
           value = await xtoken_contract.getPrice(coinsWantToBuy)
     
           let options = {
             value: value, 
-            gasLimit: '2100000'
         }
-    
+          try {
             const buy = await xtoken_contract.Buy(coinsWantToBuy, options)
             console.log("RoundsaleTotalAmount",await xtoken_contract.roundsaleTotalAmount())
             console.log("Soled Tokens Quantity", await xtoken_contract.tokenSales())
             console.log(`Price for ${coinsWantToBuy} tokens`, value)
             console.log("*********************************************************")
-            x--
+          } catch {
+            console.log("ERRRRRRROOOORRRRR")
+          }
+          
+          x--
         }
       })
 
-      it("Lock and Reward should work properly", async () => {
-        const {xtoken_contract, xlock_contract, pricefeed_dai} = await loadFixture(deployTokenFixture);
+    //   it("Lock and Reward should work properly", async () => {
+    //     const {xtoken_contract, xlock_contract, pricefeed_dai} = await loadFixture(deployTokenFixture);
 
-        console.log("Contract address VIEW", await xtoken_contract.removeLoc())
+    //     console.log("Contract address VIEW", await xtoken_contract.removeLoc())
 
-        let bigNum1 = ethers.BigNumber.from('20000')
-        let bigNum2 = ethers.BigNumber.from('100000000000000000000')   //100
+    //     let bigNum1 = ethers.BigNumber.from('20000')
+    //     let bigNum2 = ethers.BigNumber.from('100000000000000000000')   //100
 
-        console.log("Contract address Balance", await xtoken_contract.balanceOf(xtoken_contract.address))
-        await xtoken_contract.transferToken(thirdOne.address, bigNum2)
-        console.log("ThirdOne tokens", await xtoken_contract.balanceOf(thirdOne.address))
+    //     console.log("Contract address Balance", await xtoken_contract.balanceOf(xtoken_contract.address))
+    //     await xtoken_contract.transferToken(thirdOne.address, bigNum2)
+    //     console.log("ThirdOne tokens", await xtoken_contract.balanceOf(thirdOne.address))
 
-        await dai.connect(dai_whale).approve(xlock_contract.address, 2500000000000009)
-        console.log("+++++++++++++++++++++++++++++++++++++++++++++")
-        await xlock_contract.addToken(DAI, 250000000000000, pricefeed_dai)
+    //     await dai.connect(dai_whale).approve(xlock_contract.address, 2500000000000009)
+    //     console.log("+++++++++++++++++++++++++++++++++++++++++++++")
+    //     await xlock_contract.addToken(DAI, 250000000000000, pricefeed_dai)
         
-        // console.log("LOCK returns ",  await xtoken_contract.lock(1))
-        let y = 5
-        while (y) {
-          await xlock_contract.connect(dai_whale).deposit(DAI, 250000000000000, 1722690841, [[2, 100]], dai_whale.address, false)
-          console.log("Lock amount ",  await xlock_contract.lockedAssetQty())
+    //     // console.log("LOCK returns ",  await xtoken_contract.lock(1))
+    //     let y = 5
+    //     while (y) {
+    //       await xlock_contract.connect(dai_whale).deposit(DAI, 250000000000000, 1722690841, [[2, 100]], dai_whale.address, false)
+    //       console.log("Lock amount ",  await xlock_contract.lockedAssetQty())
 
-          try {
-            await xtoken_contract.transferToken(thirdOne.address, bigNum2)
-            console.log("Trasnfer is DONE as LOCKED is false")
+    //       try { 
+    //         await xtoken_contract.transferToken(thirdOne.address, bigNum2)
+    //         console.log("Trasnfer is DONE as LOCKED is false")
 
-          } catch {
-            console.log("Can't transfer as LOCKED is true")
-          }
-          await xtoken_contract.transferToken(thirdOne.address, bigNum1)
+    //       } catch {
+    //         console.log("Can't transfer as LOCKED is true")
+    //       }
+    //       await xtoken_contract.transferToken(thirdOne.address, bigNum1)
           
-          y--
-        }
-        console.log("***************************************************************************")
-        console.log("Contract address BALANCE OF TOKENS", await xtoken_contract.balanceOf(xtoken_contract.address))
-        console.log("ThirdOne tokens", await xtoken_contract.balanceOf(thirdOne.address))
-        await xtoken_contract.transferToken(thirdOne.address, 1)
+    //       y--
+    //     }
+    //     console.log("***************************************************************************")
+    //     console.log("Contract address BALANCE OF TOKENS", await xtoken_contract.balanceOf(xtoken_contract.address))
+    //     console.log("ThirdOne tokens", await xtoken_contract.balanceOf(thirdOne.address))
+    //     await xtoken_contract.transferToken(thirdOne.address, 1)
 
-    })
+    // })
   })
 })
