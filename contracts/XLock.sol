@@ -27,19 +27,13 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     mapping(address => uint256[])  _userVsLockIds;
     mapping(uint256 => LockedAsset) public  _idVsLockedAsset;    //CHANGE: remove public
 
-    //REMOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOVE PART <<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-    // address public sss = address(loc);
-    // function removeLoc() view public returns(address){
-    //     return sss;
-    // }
+ 
 
 
     function getAddress(uint i) public view returns(address){
         return xtoken.addresses(i);
     }
 
-    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     XToken xtoken;
 
@@ -409,9 +403,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     //     }
     // }
 
-
     function lockedAssetQty() public view returns(bool){    //CHANGE: 100000
         return _lockId<5;
     }
-
 }
