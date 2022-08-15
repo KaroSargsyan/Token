@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-//xxxxxxxxxxxxxxxxxxxxxxx
 import "./ERC20Upgradeable.sol";
 import "./OwnableUpgradeable.sol";
 import "./Initializable.sol";
@@ -36,6 +35,9 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     // }
 
 
+    function getAddress(uint i) public view returns(address){
+        return xtoken.addresses(i);
+    }
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -173,10 +175,9 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             require( msg.value >= newAmount,"Insufficient funds");
             token.balance += msg.value - newAmount;
         } else {
-            console.log("************************");
             console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
             ERC20Upgradeable(_token).transferFrom(msg.sender, address(this), newAmount);
-            console.log("---------------------------");
+           
 
 
         }
@@ -335,11 +336,10 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 path[2] = _tokenOut;
             }
 
-            // console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", ERC20Upgradeable(_tokenIn).allowance(address(this), UNISWAP_V2_ROUTER));
         
             // console.log("_amountIn", _amountIn);
             // console.log("_amountOutMin", amountOutMin);
-            // // console.log("path", path);
+            // console.log("path", path);
             // console.log("_to", _to);
 
 
