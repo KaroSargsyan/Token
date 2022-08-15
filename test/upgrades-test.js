@@ -8,16 +8,12 @@ const {
   const assert = require("assert");
   const { Console } = require("console");
   
-  
   const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-
   
   const ETH = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
   const pricefeed_dai = "0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9"
-
   
   const DAI_WHALE = "0x2FAF487A4414Fe77e2327F0bf4AE2a264a776AD2"   //not a contract
-  
   
   describe("Lock", function () {
     
@@ -27,8 +23,6 @@ const {
     let xcoin
     let dai_whale
     let dai
-
-    // /home/ed/Desktop/001/Xlock/artifacts/contracts/IERC20.sol
      
     async function deployTokenFixture(){
       [owner, beneficary, thirdOne] = await ethers.getSigners()
@@ -60,15 +54,15 @@ const {
     assert(5 === 5)
 
     describe("Should be updated to", () => {
-    //   it('Should be updated Xother1',async () => {
-    //     const {XLock, xtoken_contract, xlock_contract} = await loadFixture(deployTokenFixture);
-    //     const Other = await ethers.getContractFactory("Xother1")
-    //     const other_contract = await upgrades.upgradeProxy(xlock_contract.address, Other) 
+      it('Should be updated Xother1',async () => {
+        const {XLock, xtoken_contract, xlock_contract} = await loadFixture(deployTokenFixture);
+        const Other = await ethers.getContractFactory("Xother1")
+        const other_contract = await upgrades.upgradeProxy(xlock_contract.address, Other) 
         
-    //     console.log("other_contract ADDRESS", other_contract.address)
-    //     console.log("NEW FUNCTIONALITY",await  other_contract.newFunc())
+        console.log("other_contract ADDRESS", other_contract.address)
+        console.log("NEW FUNCTIONALITY",await  other_contract.newFunc())
 
-    // })   
+    })   
 
     it('Should be updated Xother2',async () => {
       const {XLock, xtoken_contract, xlock_contract} = await loadFixture(deployTokenFixture);
@@ -83,7 +77,6 @@ const {
       console.log("proxy address", xlock_contract.address)
       console.log("NEW FUNCTIONALITY",await  other_contract.newFunc())
       console.log("NEW FUNCTIONALITY addToken",await  other_contract.addToken(DAI, 250000000000000, pricefeed_dai))
-
 
   }) 
   })
