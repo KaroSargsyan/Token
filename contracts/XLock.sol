@@ -349,7 +349,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
 
-    function getAmountOutMin(         //CHANGE: remove 
+    function getAmountOutMin(         
         address _tokenIn,
         address _tokenOut,
         uint256 _amountIn

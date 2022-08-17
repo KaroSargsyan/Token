@@ -33,7 +33,7 @@ const {
       
       console.log("Xtoken Deployed AT", xtoken_contract.address);
     
-      return {xcoin, owner, beneficary, thirdOne, XLock, xtoken_contract, xlock_contract, dai_whale};
+      return {xcoin, owner, beneficary, thirdOne, xtoken_contract, xlock_contract, dai_whale};
     }
 
     it('Should add a token',async () => {

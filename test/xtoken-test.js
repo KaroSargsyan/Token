@@ -35,7 +35,7 @@ const {
       console.log("Xtoken Deployed AT", xtoken_contract.address);
       console.log("Xlock Deployed AT", xlock_contract.address);
   
-      return {xcoin, owner, beneficary, thirdOne, XLock, xtoken_contract, xlock_contract, coin_whale, pricefeed_dai};
+      return {xcoin, owner, beneficary, thirdOne, xtoken_contract, xlock_contract, coin_whale, pricefeed_dai};
     }
 
 
