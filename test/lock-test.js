@@ -34,10 +34,10 @@ describe("Lock", function () {
   async function deployTokenFixture(){
     [owner, beneficary, thirdOne] = await ethers.getSigners();
     coin_whale = await ethers.getImpersonatedSigner(COIN_WHALE);  // Impersonate any account
-    dai = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", DAI);  //or contracts/IERC20.sol:IERC20
-    wbtc = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", WBTC);
-    link = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", LINK);  
-    weth = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", WETH);    
+    dai = await ethers.getContractAt("IERC20", DAI);  //or contracts/IERC20.sol:IERC20
+    wbtc = await ethers.getContractAt("IERC20", WBTC);
+    link = await ethers.getContractAt("IERC20", LINK);  
+    weth = await ethers.getContractAt("IERC20", WETH);    
 
     const XLock = await ethers.getContractFactory("XLock", owner);
     const XToken = await ethers.getContractFactory("XToken", owner);

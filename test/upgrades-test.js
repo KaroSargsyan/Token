@@ -23,7 +23,7 @@ const {
     async function deployTokenFixture(){
       [owner, beneficary, thirdOne] = await ethers.getSigners();
       dai_whale = await ethers.getImpersonatedSigner(DAI_WHALE);  // Impersonate any account
-      dai = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", DAI);  
+      dai = await ethers.getContractAt("IERC20", DAI);  
   
       const XLock = await ethers.getContractFactory("XLock", owner);
       const XToken = await ethers.getContractFactory("XToken", owner);
