@@ -5,7 +5,6 @@ const { ethers } = require("hardhat");
 const { expect } = require("chai");
 const hre = require("hardhat");
 
-
 const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
 const WBTC = "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599";
 const LINK = "0x514910771AF9Ca656af840dff83E8264EcF986CA";
@@ -51,7 +50,7 @@ describe("Lock", function () {
 
     console.log("Xtoken Deployed AT", xtoken_contract.address);
 
-    return {xcoin, owner, beneficary, thirdOne, XLock, xtoken_contract, xlock_contract, coin_whale};
+    return {xcoin, owner, beneficary, thirdOne, xtoken_contract, xlock_contract, coin_whale};
   }
 
   it('Should add a token',async () => {
@@ -163,12 +162,10 @@ describe("Lock", function () {
   
 
 
-
   describe('Time manipulations', () => {
 
     it('should change the time', async () => {
 
-  
       const year = 365 * 24 * 60 * 60;
   
       const blockNumBefore = await ethers.provider.getBlockNumber();
@@ -300,7 +297,7 @@ describe("Lock", function () {
     it('Should be deposited/withdrawed properly - ETH',async () => {
       const {xlock_contract, coin_whale} = await loadFixture(deployTokenFixture);
       console.log('xlock_contract address is:  ', xlock_contract.address);
-      
+      let aa = 99999999999999999999999999
       let amount = ethers.BigNumber.from('3000000000000000000')
       let amount2  = ethers.utils.parseUnits('10', 'ether')
       let options =  {gasPrice: ethers.utils.parseUnits('50', 'gwei'), value: ethers.utils.parseUnits('3.06', 'ether')};
