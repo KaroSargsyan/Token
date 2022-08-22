@@ -28,6 +28,11 @@ module.exports = {
       accounts: ["b78330805132f471817bc7db07168d1d26c8c162c0e96dfdf4a8b2016082101f"] // add the account that will deploy the contract (private key)
      },
 
+    rinkeby: {
+      url: "https://rinkeby.infura.io/v3/059d3e91176d43c79354db9156588d70", //Infura url with projectId
+      accounts: ["b78330805132f471817bc7db07168d1d26c8c162c0e96dfdf4a8b2016082101f"] // add the account that will deploy the contract (private key)
+     },
+
 
      hardhat: {
       forking: {

@@ -102,7 +102,6 @@ contract XToken is ERC20, Ownable {
         }
     }
 
-
     function Buy (uint _amount) public payable {
         require(roundsisOver() == false, "round is over");
         require(tokenSales+_amount<=roundQuantity*3,"tokens are sold or amount exceeds maximum");
