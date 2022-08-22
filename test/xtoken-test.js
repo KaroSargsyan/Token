@@ -1,5 +1,5 @@
 const {
-    loadFixture,
+    loadFixture
   } = require("@nomicfoundation/hardhat-network-helpers");
   const { ethers } = require("hardhat");
   const hre = require("hardhat");
@@ -10,21 +10,22 @@ const {
   
   describe("Xtoken", function () {
     
-    let owner
-    let beneficary
-    let thirdOne
-    let xcoin
-    let coin_whale
-    let dai
+    let owner;
+    let beneficary;
+    let thirdOne;
+    let xcoin;
+    let coin_whale;
+    let dai;
 
     async function deployTokenFixture(){
       [owner, beneficary, thirdOne] = await ethers.getSigners()
       coin_whale = await ethers.getImpersonatedSigner(COIN_WHALE);  // Impersonate any account
-      dai = await ethers.getContractAt("IERC20", DAI);
+      dai = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", DAI);
       const pricefeed_dai = "0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9";
       const XLock = await ethers.getContractFactory("XLock", owner);
       const XToken = await ethers.getContractFactory("XToken", owner);
       const xtoken_contract = await XToken.deploy();
+
 
       await xtoken_contract.deployed()
       
@@ -35,7 +36,7 @@ const {
       console.log("Xtoken Deployed AT", xtoken_contract.address);
       console.log("Xlock Deployed AT", xlock_contract.address);
   
-      return {xcoin, owner, beneficary, thirdOne, xtoken_contract, xlock_contract, coin_whale, pricefeed_dai};
+      return {xcoin, owner, beneficary, thirdOne, XLock, xtoken_contract, xlock_contract, coin_whale, pricefeed_dai};
     }
 
 

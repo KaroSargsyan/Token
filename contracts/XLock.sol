@@ -217,11 +217,23 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
     function claim(uint256 id, address SWAPTOKEN ) public payable canClaim(id) {
         LockedAsset storage asset = _idVsLockedAsset[id];
-        uint newAmount=((asset.amount*asset.option[0][1])/100);
-        for(uint i = 0; i < asset.option.length-1; i++){
-            asset.option[i] = asset.option[i+1];      
+        uint newAmount;
+        if (asset.endDate <= block.timestamp) {
+            console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+            for(uint i = 0; i < asset.option.length; i++) {
+                newAmount+=asset.option[i][1];
+                delete asset.option[i];
+            }  
+            newAmount = (asset.amount * newAmount) / 100;
+            asset.status = Status.CLOSED;
+          
+        } else {
+            newAmount=((asset.amount*asset.option[0][1])/100);
+            for(uint i = 0; i < asset.option.length-1; i++){
+                asset.option[i] = asset.option[i+1];
+            }
+            asset.option.pop();
         }
-        asset.option.pop();
         if (asset.option.length==0){
             asset.status = Status.CLOSED;
         }
@@ -234,7 +246,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             }
         } else {
             if (asset.isExchangable){
-                swap(asset.token, SWAPTOKEN, newAmount, asset.beneficiary);  //CHANGE: remove 0
+                swap(asset.token, SWAPTOKEN, newAmount, asset.beneficiary); 
             } else {
                 ERC20Upgradeable(asset.token).transfer(asset.beneficiary, newAmount);
             }
@@ -260,7 +272,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
     function _eventIs(uint id) public view returns(bool success ) { //CHANGE: internal
         LockedAsset memory asset = _idVsLockedAsset[id];
-        int newAmount = asset.priceInUSD*int(asset.option[0][0]);
+        int newAmount = asset.priceInUSD*int(asset.option[0][0])/100;
         (
             /*address tokenAddress*/,
             /*uint256 minAmount*/,
