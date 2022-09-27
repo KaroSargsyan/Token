@@ -20,7 +20,7 @@ contract XToken is ERC20, Ownable {
 
     uint public roundsaleTotalAmount = 300;
 
-    XLock loc;
+    XLock public loc;      //CHANGE: remove public;
 
     mapping(uint256 => address) public addresses;
     mapping (address => uint) public indicis;

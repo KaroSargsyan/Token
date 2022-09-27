@@ -2,6 +2,8 @@ require("@nomiclabs/hardhat-waffle");
 require('@openzeppelin/hardhat-upgrades');
 require('solidity-coverage')        //npx hardhat coverage
 // require("hardhat-gas-reporter");
+require('hardhat-contract-sizer');
+
 
 
 // This is a sample Hardhat task. To learn how to create your own go to
