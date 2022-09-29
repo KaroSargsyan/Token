@@ -6,9 +6,10 @@ import "./OwnableUpgradeable.sol";
 import "./Initializable.sol";
 import "./UUPSUpgradeable.sol";
 import "./IUniswapV2Router01.sol";
-import "./AggregatorV3Interface.sol";
+import "./AggregatorV3Interface.sol"; 
 import "./XToken.sol";
 import "hardhat/console.sol";
+import "./IERC721Upgradeable.sol";
 
 contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     
@@ -42,6 +43,11 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         uint256 minAmount;
         uint256 balance;
         address priceFeedAddress;
+    }
+
+    struct LockedNft {
+        address nftContract,
+        
     }
 
     struct LockedAsset {
@@ -148,7 +154,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
 
     function deposit(
-        address _token,
+        address _token, //contract
         uint amount, 
         uint endDate, 
         uint[][] memory option,    
@@ -201,35 +207,57 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         _userVsLockIds[beneficiary].push(_lockId);
         xtoken.airdrop(msg.sender,1);
         _lockId++;
+    }
+
+    function depositNft(
+        uint endDate,
+        uint tokenId, 
+        address _NftContract,
+        address payable beneficiary
+
+    ) public payable {
+
+        require(endDate>=minLockDate,"Send correct endDate");
+        require(_NftContract != address(0),"Send valid token address");
+        require(beneficiary != address(0),"Send valid beneficiary address");
+        require(IERC721Upgradeable(_NftContract).getApproved(tokenId) == address(this), "First approve, please!");
+
+        // IERC721Upgradeable(_NftContract).approve(address(this), tokenId);
+        IERC721Upgradeable(_NftContract).transferFrom(msg.sender, address(this), tokenId);
+
 
     }
 
 
-    function swapTokenBalance(
-        address tokenIn, 
-        address tokenOut
-    ) 
-        public payable onlyOwner 
-    {
-        uint256 index = _tokenVsIndex[tokenIn]; 
-        Token storage token = _tokens[index];
-        uint swapingAmount=token.balance;
-        token.balance = 0;
-        swap(tokenIn, tokenOut, swapingAmount, Wallet);
-    }
+// CHANGE: uncomment swapTokenBalance
 
 
-    function withdraw(address tokenAddress, address _receiver) public payable onlyOwner {  //CHANGE remove: address _receiver
-        uint256 index = _tokenVsIndex[tokenAddress];
-        Token storage token = _tokens[index];
-        uint transferingAmount=token.balance;
-        token.balance = 0;
-        if (tokenAddress==ETH){
-            payable(Wallet).transfer(transferingAmount);
-        } else { 
-            ERC20Upgradeable(tokenAddress).transfer(_receiver, transferingAmount);
-        }
-    }
+    // function swapTokenBalance(
+    //     address tokenIn, 
+    //     address tokenOut
+    // ) 
+    //     public payable onlyOwner
+    // {
+    //     uint256 index = _tokenVsIndex[tokenIn]; 
+    //     Token storage token = _tokens[index];
+    //     uint swapingAmount=token.balance;
+    //     token.balance = 0;
+    //     swap(tokenIn, tokenOut, swapingAmount, Wallet);
+    // }
+
+// CHANGE: uncomment withdraw
+
+    // function withdraw(address tokenAddress, address _receiver) public payable onlyOwner {  //CHANGE remove: address _receiver
+    //     uint256 index = _tokenVsIndex[tokenAddress];
+    //     Token storage token = _tokens[index];
+    //     uint transferingAmount=token.balance;
+    //     token.balance = 0;
+    //     if (tokenAddress==ETH){
+    //         payable(Wallet).transfer(transferingAmount);
+    //     } else { 
+    //         ERC20Upgradeable(tokenAddress).transfer(_receiver, transferingAmount);
+    //     }
+    // }
 
 
     function claim(uint256 id, address SWAPTOKEN ) public payable canClaim(id) {
