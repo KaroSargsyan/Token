@@ -37,30 +37,22 @@ const {
       coin_whale = await ethers.getImpersonatedSigner(COIN_WHALE);  // Impersonate any account
       dai = await ethers.getContractAt(path, DAI);  //or contracts/IERC20.sol:IERC20
       wbtc = await ethers.getContractAt(path, WBTC);
-      link = await ethers.getContractAt(path, LINK);  
-      weth = await ethers.getContractAt(path, WETH);    
-  
-      const XLock = await ethers.getContractFactory("XLock", owner);
-      const XToken = await ethers.getContractFactory("XToken", owner);
-      const xtoken_contract = await XToken.deploy();
-      await xtoken_contract.deployed();
+      link = await ethers.getContractAt(path, LINK);
+      weth = await ethers.getContractAt(path, WETH);
 
-      //NFT deploy
+      const NftSample = await ethers.getContractFactory("MyToken", owner);
+      const nftSample = await NftSample.deploy();
+      await nftSample.deployed();
 
-      const Nft = await ethers.getContractFactory("MyToken", owner);
-      const nft_contract = await Nft.deploy();
-      await nft_contract.deployed();
-      console.log("Nft contract deployesd at   ", nft_contract.address);
+
+      const XNft = await ethers.getContractFactory("XNft", owner);
+      const xlock_nft = await upgrades.deployProxy(XNft, {kind: 'uups'});
+      await xlock_nft.deployed();
+      console.log("Nft contract deployesd at   ", xlock_nft.address);
 
       //
-      
-      const xlock_contract = await upgrades.deployProxy(XLock, [xtoken_contract.address], {kind: 'uups'});
-  
-      await xtoken_contract.initLock(xlock_contract.address);   //give XLock address to XLock contract 
-  
-      console.log("Xtoken Deployed AT", xtoken_contract.address);
-  
-      return {xcoin, owner, beneficary, thirdOne, xtoken_contract, xlock_contract, nft_contract, coin_whale};
+          
+      return {xcoin, owner, beneficary, thirdOne, xlock_nft, coin_whale, nftSample};
     }
   
   
@@ -91,23 +83,131 @@ const {
     //     })
 
     it("Checks NFT deposit",async ()=> {
-        const {xtoken_contract, xlock_contract,nft_contract, coin_whale, thirdOne} = await loadFixture(deployTokenFixture);
+        const {owner, beneficary, thirdOne, xlock_nft, coin_whale, nftSample} = await loadFixture(deployTokenFixture);
         
-        // console.log(nft_contract)
-        await nft_contract.safeMint(owner.address)
+        xlock_nft.addToken(dai.address);
+        console.log("*/*/*/*/*/*/*/*/*/*/*/*/*/*",await nftSample.owner())
+        await nftSample.safeMint(coin_whale.address)
 
-        console.log("Balance of owner BEFORE:  ", await nft_contract.balanceOf(owner.address))
+        console.log("Balance of owner AFTER nft minting:  ", await nftSample.balanceOf(owner.address))
 
-        await nft_contract.approve(xlock_contract.address, 0);
-        await xlock_contract.depositNft(1722690841, 0, nft_contract.address, thirdOne.address);
+        await nftSample.connect(coin_whale).approve(xlock_nft.address, 0);
+        console.log("Approval is given to ", await nftSample.getApproved(0))
 
-        console.log("Balance of owner:  AFTER", await nft_contract.balanceOf(owner.address))
-        console.log("Balance of Xlock contractr:  ", await nft_contract.balanceOf(xlock_contract.address))
+        await dai.connect(coin_whale).approve(xlock_nft.address, 250000000000000);
+
+        console.log("Whale NFT balance BEFORE", await nftSample.balanceOf(coin_whale.address))
+        console.log("Whale approved amount: ", await dai.allowance(coin_whale.address, xlock_nft.address))
+
+        console.log("Whale's balance of DAI  ",await dai.balanceOf(coin_whale.address))
+        await xlock_nft.connect(coin_whale).deposit(nftSample.address, thirdOne.address, dai.address, 0, 1722690841);
+        console.log("Whale NFT balance AFTER", await nftSample.balanceOf(coin_whale.address))
     })
 
 
     it("Checks NFT claim when the date comes", async () => {
-      
+        const {owner, beneficary, thirdOne, xlock_nft, coin_whale, nftSample} = await loadFixture(deployTokenFixture);
+        xlock_nft.addToken(dai.address);
+        console.log("*/*/*/*/*/*/*/*/*/*/*/*/*/*", nftSample.address)
+        await nftSample.safeMint(coin_whale.address)
+
+        console.log("Balance of owner AFTER nft minting:  ", await nftSample.balanceOf(owner.address))
+
+        await nftSample.connect(coin_whale).approve(xlock_nft.address, 0);
+        console.log("Approval is given to ", await nftSample.getApproved(0))
+
+        await dai.connect(coin_whale).approve(xlock_nft.address, 250000000000000);
+
+        console.log("Whale NFT balance BEFORE", await nftSample.balanceOf(coin_whale.address))
+        console.log("Our contract NFT balance BEFORE  ",await nftSample.balanceOf(xlock_nft.address))
+        console.log("Whale approved amount: ", await dai.allowance(coin_whale.address, xlock_nft.address))
+
+        await xlock_nft.connect(coin_whale).deposit(nftSample.address, thirdOne.address, dai.address, 0, 1722690841);
+        console.log("Whale NFT balance AFTER", await nftSample.balanceOf(coin_whale.address))
+        console.log("Our contract NFT balance AFTER  ",await nftSample.balanceOf(xlock_nft.address))
+
+
+        //Change Time
+
+        const year = 365 * 24 * 60 * 60;
+  
+        const blockNumBefore = await ethers.provider.getBlockNumber();
+        const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+        const timestampBefore = blockBefore.timestamp;
+    
+        await ethers.provider.send('evm_increaseTime', [3*year]);
+        await ethers.provider.send('evm_mine');
+
+        const blockNumAfter = await ethers.provider.getBlockNumber();
+        const blockAfter = await ethers.provider.getBlock(blockNumAfter);
+        const timestampAfter = blockAfter.timestamp;
+        console.log("Before", timestampBefore);
+        console.log("After", timestampAfter);
+        console.log("Owner of nft: ",await nftSample.ownerOf(0))
+        await xlock_nft.claim(0);
+        console.log("Beneficary NFT balance AFTER CLAIM", await nftSample.balanceOf(thirdOne.address))
+        console.log("Our contract NFT balance AFTER CLAIM ",await nftSample.balanceOf(xlock_nft.address))
     })
-      })
+
+    it ("Checks the service fee after deposit NOT eth", async () => {
+      const {owner, beneficary, thirdOne, xlock_nft, coin_whale, nftSample} = await loadFixture(deployTokenFixture);
+      xlock_nft.addToken(dai.address);
+      console.log("*/*/*/*/*/*/*/*/*/*/*/*/*/*", nftSample.address)
+      await nftSample.safeMint(coin_whale.address)
+
+      console.log("Balance of owner AFTER nft minting:  ", await nftSample.balanceOf(owner.address))
+
+      await nftSample.connect(coin_whale).approve(xlock_nft.address, 0);
+      console.log("Approval is given to ", await nftSample.getApproved(0))
+
+      await dai.connect(coin_whale).approve(xlock_nft.address, 250000000000000);
+
+      // console.log("Whale NFT balance BEFORE", await nftSample.balanceOf(coin_whale.address))
+      // console.log("Our contract NFT balance BEFORE  ",await nftSample.balanceOf(xlock_nft.address))
+      // console.log("Whale approved amount: ", await dai.allowance(coin_whale.address, xlock_nft.address))
+
+      console.log("Our contract balance BEFORE client's deposit",await  dai.balanceOf(xlock_nft.address))
+
+      await xlock_nft.connect(coin_whale).deposit(nftSample.address, thirdOne.address, dai.address, 0, 1722690841);
+      // console.log("Whale NFT balance AFTER", await nftSample.balanceOf(coin_whale.address))
+      // console.log("Our contract NFT balance AFTER  ",await nftSample.balanceOf(xlock_nft.address))
+
+      console.log("Our contract balance AFTER client's deposit",await  dai.balanceOf(xlock_nft.address))
     })
+
+
+    it ("Checks the service fee after deposit ETH", async () => {
+      const {owner, beneficary, thirdOne, xlock_nft, coin_whale, nftSample} = await loadFixture(deployTokenFixture);
+      xlock_nft.addToken(dai.address);
+      console.log("*/*/*/*/*/*/*/*/*/*/*/*/*/*", nftSample.address)
+      await nftSample.safeMint(coin_whale.address)
+
+      console.log("Balance of owner AFTER nft minting:  ", await nftSample.balanceOf(owner.address))
+
+      await nftSample.connect(coin_whale).approve(xlock_nft.address, 0);
+      console.log("Approval is given to ", await nftSample.getApproved(0))
+
+      // console.log("Whale NFT balance BEFORE", await nftSample.balanceOf(coin_whale.address))
+      // console.log("Our contract NFT balance BEFORE  ",await nftSample.balanceOf(xlock_nft.address))
+      // console.log("Whale approved amount: ", await dai.allowance(coin_whale.address, xlock_nft.address))
+
+
+      let amount = ethers.BigNumber.from('2000000000000000000000');
+      let amount2  = ethers.utils.parseUnits('10', 'ether');
+
+      console.log("Our contract ETH Balance BEFORE deposit", await ethers.provider.getBalance(xlock_nft.address))
+
+      let options =  {gasPrice: ethers.utils.parseUnits('50', 'gwei'), value: ethers.utils.parseUnits('3', 'ether')};
+
+      await xlock_nft.connect(coin_whale).deposit(nftSample.address, thirdOne.address, ETH, 0, 1722690841,options );
+
+      console.log("Our contract ETH Balance AFTER deposit", await ethers.provider.getBalance(xlock_nft.address))
+
+      // console.log("Whale NFT balance AFTER", await nftSample.balanceOf(coin_whale.address))
+      // console.log("Our contract NFT balance AFTER  ",await nftSample.balanceOf(xlock_nft.address))
+
+    })
+
+
+   })
+})

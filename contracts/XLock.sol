@@ -13,7 +13,7 @@ import "./IERC721Upgradeable.sol";
 
 contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     
-    address private  UNISWAP_V2_ROUTER ;
+    address private  UNISWAP_V2_ROUTER;
     address private  ETH ;
     address private  WETH;
     address private  DAI ;
@@ -28,8 +28,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     mapping(address => uint256[])  _userVsLockIds;
     mapping(uint256 => LockedAsset) public  _idVsLockedAsset;    //CHANGE: remove public
 
- 
-
+    event Deposit( uint indexed num, address ETH,string str);
+    event Claim(string success);
 
     function getAddress(uint i) public view returns(address){
         return xtoken.addresses(i);
@@ -40,29 +40,25 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
     struct Token {
         address tokenAddress;
+        address priceFeedAddress;
         uint256 minAmount;
         uint256 balance;
-        address priceFeedAddress;
+        Status status;
     }
 
-    struct LockedNft {
-        address nftContract,
-        
-    }
 
     struct LockedAsset {
         address token;
+        address payable beneficiary;
+        address swapTokenforLimitOrder;
         uint amount;
         uint startDate;
         uint endDate;
-        uint lastLocked;
-        uint[][] option;
-        address payable beneficiary;
-        bool isExchangable;
-        Status status;
         int priceInUSD;
+        uint[][] option;
+        bool isExchangable;
         bool limitOrder;
-        address swapTokenforLimitOrder;
+        Status status;
     }
 
     Token[] private _tokens;
@@ -90,78 +86,83 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         address tokenAddress, 
         uint256 minAmount, 
         uint balance, 
-        address priceFeedAddress 
+        address priceFeedAddress,
+        Status status
     )
     {
         uint256 index = _tokenVsIndex[_tokenAddress];
         Token memory token = _tokens[index];
-        return (token.tokenAddress, token.minAmount,token.balance,token.priceFeedAddress);
+        return (token.tokenAddress, token.minAmount,token.balance,token.priceFeedAddress, token.status);
     }
 
 
     // function getLockedAsset(uint256 id) external view returns(
     //     address token,
     //     address beneficiary,
+    //     address swapTokenforLimitOrder,
     //     uint256 amount,
     //     uint256 startDate,
     //     uint256 endDate,
-    //     uint256 lastLocked,
-    //     bool isExchangable,
-    //     Status status,
-    //     uint[][] memory option,
     //     int priceInUSD,
+    //     uint[][] memory option,
+    //     bool isExchangable,
     //     bool limitOrder,
-    //     address swapTokenforLimitOrder
+    //     Status status
     // )
     // {
     //     LockedAsset memory asset = _idVsLockedAsset[id];
     //     token = asset.token;
+    //     beneficiary = asset.beneficiary;
+    //     swapTokenforLimitOrder = asset.swapTokenforLimitOrder;
     //     amount = asset.amount;
     //     startDate = asset.startDate;
     //     endDate = asset.endDate;
-    //     beneficiary = asset.beneficiary;
-    //     lastLocked = asset.lastLocked;
-    //     status=asset.status;
-    //     isExchangable=asset.isExchangable;
-    //     option  = asset.option;
     //     priceInUSD = asset.priceInUSD;
+    //     option  = asset.option;
+    //     isExchangable=asset.isExchangable;
     //     limitOrder = asset.limitOrder;
-    //     swapTokenforLimitOrder = asset.swapTokenforLimitOrder;
+    //     status=asset.status;
 
 
     //     return(
     //         token,
     //         beneficiary,
+    //         swapTokenforLimitOrder,
     //         amount,
     //         startDate,
     //         endDate,
-    //         lastLocked,
-    //         isExchangable,
-    //         status,
-    //         option,
     //         priceInUSD,
+    //         option,
+    //         isExchangable,
     //         limitOrder,
-    //         swapTokenforLimitOrder
+    //         status
     //     );
     // }
 
 
     function addToken(address token, uint256 minAmount, address priceFeedAddress) public onlyOwner {
-        _tokens.push(Token({tokenAddress: token, minAmount: minAmount, 
-            balance:0,priceFeedAddress:priceFeedAddress}));
+        _tokens.push(Token({tokenAddress: token,priceFeedAddress:priceFeedAddress, 
+        minAmount: minAmount, balance:0, status: Status.OPEN}));
         _tokenVsIndex[token] = _tokens.length-1;
+    }
+
+    function setToken(address _token, address _priceFeedAddress, uint _minAmount, bool _isActive) public onlyOwner {    //TEST IT
+        Token storage token = _tokens[_tokenVsIndex[_token]];
+        token.priceFeedAddress = _priceFeedAddress;
+        token.minAmount = _minAmount;
+        token.status =  _isActive  ? Status.OPEN  : Status.CLOSED; 
     }
 
 
     function deposit(
         address _token, //contract
+        address payable beneficiary, 
+        address swapTokenforLimitOrder,
         uint amount, 
         uint endDate, 
         uint[][] memory option,    
-        address payable beneficiary, 
         bool isExchangable,
-        bool limitOrder,
-        address swapTokenforLimitOrder
+        bool limitOrder
     ) 
         public payable 
     {
@@ -170,6 +171,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         require(_token != address(0),"Send valid token address");
         require(endDate>=minLockDate,"Send correct endDate");
         Token storage token = _tokens[_tokenVsIndex[_token]];
+        require(token.status == Status.OPEN, "Token is closed");
         require(amount >= token.minAmount,"Minimum amount of tokens");
         uint _totalprocent;
         int priceInUSD;
@@ -201,32 +203,17 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             priceInUSD = getLatestPrice(token.priceFeedAddress);
         }
 
-        _idVsLockedAsset[_lockId]= LockedAsset({ token: _token, amount: amount, startDate: block.timestamp, 
-            endDate: endDate, lastLocked: block.timestamp, option: option, 
-            beneficiary: beneficiary, isExchangable:isExchangable,status:Status.OPEN,priceInUSD:priceInUSD, limitOrder: limitOrder, swapTokenforLimitOrder: swapTokenforLimitOrder});
+        _idVsLockedAsset[_lockId]= LockedAsset({ token: _token, beneficiary: beneficiary, swapTokenforLimitOrder: swapTokenforLimitOrder, 
+        amount: amount, startDate: block.timestamp, endDate: endDate, priceInUSD:priceInUSD, option: option, 
+           isExchangable:isExchangable, limitOrder: limitOrder, status:Status.OPEN
+        });
         _userVsLockIds[beneficiary].push(_lockId);
         xtoken.airdrop(msg.sender,1);
         _lockId++;
+
+        emit Deposit(9999999999999,ETH, "Successssssss");
     }
 
-    function depositNft(
-        uint endDate,
-        uint tokenId, 
-        address _NftContract,
-        address payable beneficiary
-
-    ) public payable {
-
-        require(endDate>=minLockDate,"Send correct endDate");
-        require(_NftContract != address(0),"Send valid token address");
-        require(beneficiary != address(0),"Send valid beneficiary address");
-        require(IERC721Upgradeable(_NftContract).getApproved(tokenId) == address(this), "First approve, please!");
-
-        // IERC721Upgradeable(_NftContract).approve(address(this), tokenId);
-        IERC721Upgradeable(_NftContract).transferFrom(msg.sender, address(this), tokenId);
-
-
-    }
 
 
 // CHANGE: uncomment swapTokenBalance
@@ -302,6 +289,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                     ERC20Upgradeable(asset.token).transfer(asset.beneficiary, newAmount);
                 }
             }
+
+            emit Claim("Claim is done successfully");
         } 
 
     modifier canClaim(uint256 id) {
@@ -327,7 +316,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             /*address tokenAddress*/,
             /*uint256 minAmount*/,
             /*uint balance*/,
-            address _priceFeedAddress
+            address _priceFeedAddress,
+            /*Status status*/
         ) = getToken(asset.token);
         int oraclePrice = getLatestPrice(_priceFeedAddress);
 

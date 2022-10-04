@@ -66,21 +66,30 @@ describe("Lock", function () {
   
       await dai.connect(coin_whale).approve(xlock_contract.address, 2500000000000009);
   
-      await xlock_contract.connect(coin_whale).deposit(DAI, 250000000000009, 1722690841, [[200, 100]], coin_whale.address, false, false, coin_whale.address)
-  
-      console.log("_lockId is", await xlock_contract._lockId());
-      console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0));
+      const deposit = await xlock_contract.connect(coin_whale).deposit(DAI, coin_whale.address, coin_whale.address,  250000000000009, 1722690841, [[200, 100]], false, false)
+      const depositTX = await deposit.wait()
+      console.log("*****************************")
+      // console.log(await depositTX.events[0].getTransactionReceipt())
+      console.log(await depositTX.events[2].args)
+
+      // for (const aaa of depositTX.events) {
+      //   console.log(`Event ${aaa.event} with args ${aaa.args[0]}`);
+      // }
+
+
+      // console.log("_lockId is", await xlock_contract._lockId());
+      // console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0));
       
-      // Airdrop Check
-      console.log("Xcoin of whale address", await xtoken_contract.balanceOf(coin_whale.address));
-      console.log("Xcoin total supply", await xtoken_contract.totalSupply());
+      // // Airdrop Check
+      // console.log("Xcoin of whale address", await xtoken_contract.balanceOf(coin_whale.address));
+      // console.log("Xcoin total supply", await xtoken_contract.totalSupply());
 
-      //Whale sends his token to other account to trigger transfer
+      // //Whale sends his token to other account to trigger transfer
 
-      await xtoken_contract.connect(coin_whale).transfer(thirdOne.address, 999999);
-      console.log("thirdOne Balance", await xtoken_contract.balanceOf(thirdOne.address));
-      let addr = await xlock_contract.getAddress(1);
-      console.log("From Xtoken addresses", addr);
+      // await xtoken_contract.connect(coin_whale).transfer(thirdOne.address, 999999);
+      // console.log("thirdOne Balance", await xtoken_contract.balanceOf(thirdOne.address));
+      // let addr = await xlock_contract.getAddress(1);
+      // console.log("From Xtoken addresses", addr);
       
     })
 
@@ -278,25 +287,25 @@ describe("Lock", function () {
     // })
 
 
-    it('should swap properly deposited amounts not ETH, not EXCHANGABLE', async () => {
-      const {xlock_contract, coin_whale, beneficary} = await loadFixture(deployTokenFixture);
-      const amount = ethers.BigNumber.from('3000000000000000000');
-      const amoun_to_deposit = ethers.BigNumber.from("1000000000000000000");
-      xlock_contract.addToken(LINK, 1, pricefeed_link);
+    // it('should swap properly deposited amounts not ETH, not EXCHANGABLE', async () => {
+    //   const {xlock_contract, coin_whale, beneficary} = await loadFixture(deployTokenFixture);
+    //   const amount = ethers.BigNumber.from('3000000000000000000');
+    //   const amoun_to_deposit = ethers.BigNumber.from("1000000000000000000");
+    //   xlock_contract.addToken(LINK, 1, pricefeed_link);
     
-      await link.connect(coin_whale).approve(xlock_contract.address,amount);
-      await xlock_contract.connect(coin_whale).deposit( LINK, amoun_to_deposit, 1743743187, [[10, 50], [2, 50]], beneficary.address, false, false, beneficary.address)
+    //   await link.connect(coin_whale).approve(xlock_contract.address,amount);
+    //   await xlock_contract.connect(coin_whale).deposit( LINK, amoun_to_deposit, 1743743187, [[10, 50], [2, 50]], beneficary.address, false, false, beneficary.address)
 
-      console.log('------------------------------------------------------------')
-      console.log("xlock_contract balance of WBTC", await wbtc.balanceOf(xlock_contract.address));
-      console.log("LINK toekn info: ", await xlock_contract.getToken(LINK));
-      console.log("AFTER 2nd claim getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
-      console.log("beneficary Link BEFORE", await link.balanceOf(beneficary.address));
+    //   console.log('------------------------------------------------------------')
+    //   console.log("xlock_contract balance of WBTC", await wbtc.balanceOf(xlock_contract.address));
+    //   console.log("LINK toekn info: ", await xlock_contract.getToken(LINK));
+    //   console.log("AFTER 2nd claim getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
+    //   console.log("beneficary Link BEFORE", await link.balanceOf(beneficary.address));
 
-      await xlock_contract.claim(0, LINK);
+    //   await xlock_contract.claim(0, LINK);
 
-      console.log("beneficary Link AFTER", await link.balanceOf(beneficary.address));
-    })
+    //   console.log("beneficary Link AFTER", await link.balanceOf(beneficary.address));
+    // })
   })
 
 
