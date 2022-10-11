@@ -58,29 +58,29 @@ const {
   
     describe('Deposit', () => {
   
-    //   it('Should be deposited properly DAI',async () => {
-    //     const {xtoken_contract, xlock_contract, coin_whale, thirdOne} = await loadFixture(deployTokenFixture);
-    //     console.log('xlock_contract address is:  ', xlock_contract.address);
-    //     xlock_contract.addToken(DAI, 250000000000000, pricefeed_dai);
+      // it('Should be deposited properly DAI',async () => {
+      //   const {xtoken_contract, xlock_contract, coin_whale, thirdOne} = await loadFixture(deployTokenFixture);
+      //   console.log('xlock_contract address is:  ', xlock_contract.address);
+      //   xlock_contract.addToken(DAI, 250000000000000, pricefeed_dai);
     
-    //     await dai.connect(coin_whale).approve(xlock_contract.address, 2500000000000009);
+      //   await dai.connect(coin_whale).approve(xlock_contract.address, 2500000000000009);
     
-    //     await xlock_contract.connect(coin_whale).deposit(DAI, 250000000000009, 1722690841, [[200, 100]], coin_whale.address, false, false, coin_whale.address)
+      //   await xlock_contract.connect(coin_whale).deposit(DAI,coin_whale.address,coin_whale.address, 250000000000009, 1722690841, [[200, 100]], false, false)
 
-    //     console.log("_lockId is", await xlock_contract._lockId());
-    //     console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0));
+      //   console.log("_lockId is", await xlock_contract._lockId());
+      //   console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0));
         
-    //     // Airdrop Check
-    //     console.log("Xcoin of whale address", await xtoken_contract.balanceOf(coin_whale.address));
-    //     console.log("Xcoin total supply", await xtoken_contract.totalSupply());
+      //   // Airdrop Check
+      //   console.log("Xcoin of whale address", await xtoken_contract.balanceOf(coin_whale.address));
+      //   console.log("Xcoin total supply", await xtoken_contract.totalSupply());
   
-    //     //Whale sends his token to other account to trigger transfer
+      //   //Whale sends his token to other account to trigger transfer
   
-    //     await xtoken_contract.connect(coin_whale).transfer(thirdOne.address, 999999);
-    //     console.log("thirdOne Balance", await xtoken_contract.balanceOf(thirdOne.address));
-    //     let addr = await xlock_contract.getAddress(1);
-    //     console.log("From Xtoken addresses", addr);
-    //     })
+      //   await xtoken_contract.connect(coin_whale).transfer(thirdOne.address, 999999);
+      //   console.log("thirdOne Balance", await xtoken_contract.balanceOf(thirdOne.address));
+      //   let addr = await xlock_contract.getAddress(1);
+      //   console.log("From Xtoken addresses", addr);
+      //   })
 
     it("Checks NFT deposit",async ()=> {
         const {owner, beneficary, thirdOne, xlock_nft, coin_whale, nftSample} = await loadFixture(deployTokenFixture);

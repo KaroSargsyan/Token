@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.10;
 
 import "./ERC20Upgradeable.sol";
 import "./OwnableUpgradeable.sol";
 import "./Initializable.sol";
 import "./UUPSUpgradeable.sol";
-import "./IUniswapV2Router01.sol";
+// import "./IUniswapV2Router01.sol";
+import "./IUniswapV2Router02.sol";
 import "./AggregatorV3Interface.sol"; 
 import "./XToken.sol";
 import "hardhat/console.sol";
@@ -36,7 +37,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     }
 
 
-    XToken xtoken;
+    XToken public xtoken;
 
     struct Token {
         address tokenAddress;
@@ -71,8 +72,9 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;    //Router02
         // UNISWAP_V2_ROUTER = 0xf164fC0Ec4E93095b804a4795bBe1e041497b92a;   //Router01
         ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
-        WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-        DAI = 0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658;
+        // WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+        WETH = 0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6;       //Goerly token
+        DAI = 0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658;          //??? Why?
         Wallet = 0x0aB61E7C46C6C682C8fC72E110Edf69699DAA8D2;
         xtoken = XToken(addr);
     }
@@ -91,7 +93,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     )
     {
         uint256 index = _tokenVsIndex[_tokenAddress];
-        Token memory token = _tokens[index];
+        Token storage token = _tokens[index];            //CHANGE was memory
         return (token.tokenAddress, token.minAmount,token.balance,token.priceFeedAddress, token.status);
     }
 
@@ -176,6 +178,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         uint _totalprocent;
         int priceInUSD;
 
+        priceInUSD = getLatestPrice(token.priceFeedAddress);
 
         for (uint i =0; i< option.length  ; i++){
             if (_totalprocent + option[i][1] > 100) {
@@ -190,29 +193,30 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             require( msg.value >= newAmount,"Insufficient funds");
             token.balance += msg.value - newAmount;
         } else {
-            console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
+            // console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
             ERC20Upgradeable(_token).transferFrom(msg.sender, address(this), newAmount);
         }
 
-        // endDate += block.timestamp;
-        if (limitOrder) {
+        // endDate += block.timestamp;  Frontend sjould calculate it
+
+        if (limitOrder) {                            //CHANGE: uncomment the statement
             isExchangable = true;
-            Token storage token = _tokens[_tokenVsIndex[swapTokenforLimitOrder]];
+            token = _tokens[_tokenVsIndex[swapTokenforLimitOrder]];
             priceInUSD = getLatestPrice(token.priceFeedAddress);
-        } else {
-            priceInUSD = getLatestPrice(token.priceFeedAddress);
-        }
+        } 
+
 
         _idVsLockedAsset[_lockId]= LockedAsset({ token: _token, beneficiary: beneficiary, swapTokenforLimitOrder: swapTokenforLimitOrder, 
-        amount: amount, startDate: block.timestamp, endDate: endDate, priceInUSD:priceInUSD, option: option, 
+        amount: amount, startDate: block.timestamp, endDate: endDate, priceInUSD: priceInUSD, option: option, 
            isExchangable:isExchangable, limitOrder: limitOrder, status:Status.OPEN
         });
         _userVsLockIds[beneficiary].push(_lockId);
-        xtoken.airdrop(msg.sender,1);
+        xtoken.airdrop(msg.sender,1);               
         _lockId++;
 
         emit Deposit(9999999999999,ETH, "Successssssss");
     }
+    
 
 
 
@@ -252,7 +256,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         uint newAmount;
 
             if (asset.endDate <= block.timestamp) {
-                console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+                console.log("SSSSSSSSSSSSSSSSS");
                 for(uint i = 0; i < asset.option.length; i++) {
                     newAmount+=asset.option[i][1];
                     delete asset.option[i];
@@ -261,7 +265,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 asset.status = Status.CLOSED;
             
             } else {
-                console.log("111111111111111111111111111111");
+                console.log("1111111111111111111");
                 newAmount=((asset.amount*asset.option[0][1])/100);
                 for(uint i = 0; i < asset.option.length-1; i++){
                     asset.option[i] = asset.option[i+1];
@@ -273,14 +277,14 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             }
             
             if(ETH == asset.token) {
-                console.log("333333333333333333333333333");
+                console.log("33333333333333");
                 if (asset.isExchangable){
                     swap(asset.token, SWAPTOKEN, newAmount, asset.beneficiary);
                 } else {
                     payable(asset.beneficiary).transfer(newAmount);
                 }
             } else {
-                console.log("222222222222222222222222222222");
+                console.log("22222222222222", asset.token);
                 if (asset.isExchangable){
                     console.log("222 Exchangable", asset.isExchangable);
 
@@ -290,7 +294,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 }
             }
 
-            emit Claim("Claim is done successfully");
+            emit Claim("Claim is done");
         } 
 
     modifier canClaim(uint256 id) {
@@ -322,7 +326,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         int oraclePrice = getLatestPrice(_priceFeedAddress);
 
         if (!asset.limitOrder){
-            console.log("*aaaaaaaaaaaaaaaaa");
+            // console.log("*aaaaaaaaaaaaaaaaa");
             if (5*oraclePrice >= newAmount){     
                 console.logInt(newAmount);      //  CHANGE: remove 3*
                 return true;
@@ -330,7 +334,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 return false;
             } 
         } else {
-            console.log("*bbbbbbbbbbbbbbbbbb");
+            // console.log("*bbbbbbbbbbbbbbbbbb");
             if (oraclePrice/4 <= newAmount){
                 return true;
             } else {
@@ -367,8 +371,8 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             address[] memory path = new address[](2);
             path[0] = WETH;
             path[1] = _tokenOut;
-
-            IUniswapV2Router01(UNISWAP_V2_ROUTER).swapExactETHForTokens{value: amount_in} (
+            console.log("Pathhhhhhhhhhhhhhhhhhhhhhhhhhhh", path[0]);
+            IUniswapV2Router02(UNISWAP_V2_ROUTER).swapExactETHForTokens{value: amount_in} (
                 amount_in,
                 path,
                 _to,
@@ -398,7 +402,7 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
 
 
 
-            IUniswapV2Router01(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
+            IUniswapV2Router02(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
                 _amountIn,
                 amountOutMin,  
                 path,
@@ -423,18 +427,19 @@ contract XLock is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             path[0] = _tokenIn;
             path[1] = _tokenOut;
         } else {
+            console.log("swswswswswswswswswsw");
             path = new address[](3);
             path[0] = _tokenIn;
             path[1] = WETH;
             path[2] = _tokenOut;
         }
-        uint256[] memory amountOutMins = IUniswapV2Router01(UNISWAP_V2_ROUTER).getAmountsOut(_amountIn,path);
+        uint256[] memory amountOutMins = IUniswapV2Router02(UNISWAP_V2_ROUTER).getAmountsOut(_amountIn,path);
 
         return amountOutMins[path.length -1]; 
     }
 
 
-    function getLatestPrice(address _priceFeedAddress) public view returns (int) {    //CHANGE: internal
+    function getLatestPrice(address _priceFeedAddress) internal view returns (int) {  
         AggregatorV3Interface priceFeed;
         priceFeed = AggregatorV3Interface(_priceFeedAddress);
         (

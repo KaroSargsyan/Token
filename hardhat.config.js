@@ -25,8 +25,13 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 module.exports = {
   solidity: "0.8.10",
   networks: {
-    ropsten: {
-      url: "https://ropsten.infura.io/v3/059d3e91176d43c79354db9156588d70", //Infura url with projectId
+    sepolia: {
+      url: "https://sepolia.infura.io/v3/059d3e91176d43c79354db9156588d70", //Infura url with projectId
+      accounts: ["b78330805132f471817bc7db07168d1d26c8c162c0e96dfdf4a8b2016082101f"] // add the account that will deploy the contract (private key)
+     },
+
+     goerli: {
+      url: "https://goerli.infura.io/v3/059d3e91176d43c79354db9156588d70", //Infura url with projectId
       accounts: ["b78330805132f471817bc7db07168d1d26c8c162c0e96dfdf4a8b2016082101f"] // add the account that will deploy the contract (private key)
      },
 
@@ -48,3 +53,4 @@ module.exports = {
     apiKey: "QBPG4NSN42M33J8HG3KCWBK35CM1DW1MGK"
   }
 };
+

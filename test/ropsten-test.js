@@ -16,7 +16,7 @@ const {
 //   const pricefeed_eth = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419";
   const pricefeed_link = "0xd8bD0a1cB028a31AA859A21A3758685a95dE4623";
   
-  const COIN_WHALE = "0xb114E604972e7D2e510730768226DEB6B0F07363";  //not a contract
+  const COIN_WHALE = "0x2FAF487A4414Fe77e2327F0bf4AE2a264a776AD2";  //not a contract
   
   
   describe("Lock", function () {
@@ -32,12 +32,12 @@ const {
     let weth;
      
     async function deployTokenFixture(){
-      [owner] = await ethers.getSigners();
-    //   coin_whale = await ethers.getImpersonatedSigner(COIN_WHALE);  // Impersonate any account
-    //   coin_whale = await ethers.getSigner("0xb114E604972e7D2e510730768226DEB6B0F07363")
+      // [owner] = await ethers.getSigners();
+      owner = await ethers.getImpersonatedSigner(COIN_WHALE);  // Impersonate any account
+      // owner = await ethers.getSigner("0xb114E604972e7D2e510730768226DEB6B0F07363")
     //   dai = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", DAI);  //or contracts/IERC20.sol:IERC20
     //   wbtc = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", WBTC);
-      link = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", LINK);  
+      link = await ethers.getContractAt("IERC20", LINK);  
     //   weth = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", WETH);    
 
     //   console.log("OWNER ACCOUNT", owner.address, coin_whale.address)
@@ -57,10 +57,10 @@ const {
 
         xlock_contract.addToken(LINK, 1000, pricefeed_link);
         await link.connect(owner).approve(xlock_contract.address, 100000);
-        await xlock_contract.connect(owner).deposit( LINK, 10000, 1743743187, [[2, 20], [3, 40], [4, 20], [5, 20]], owner.address, false);
+        await xlock_contract.connect(owner).deposit( LINK, owner.address, LINK, 10000, 1743743187, [[200, 20], [300, 40], [400, 20], [500, 20]], false, false);
 
 
-        console.log("BEFORE CLAIM getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
+        // console.log("BEFORE CLAIM getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
         // console.log("EVENT", await xlock_contract._eventIs(0));
 
         console.log("1111111111111111111111111111 Claim is Done")
@@ -74,7 +74,7 @@ const {
         it('locked assets should be claimed properly', async () => {
     
           const {xlock_contract, owner} = await loadFixture(deployTokenFixture);
-
+            console.log(owner)
         })
     })
 

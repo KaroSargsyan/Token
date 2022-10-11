@@ -3,31 +3,22 @@ const fs = require("fs");
 
 
 async function main() {
-    const DAI = "0xE68104D83e647b7c1C15a91a8D8aAD21a51B3B3E" //GOERLI
-    const WETH = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6" //GOERLI token
-    const ETH = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
-    const LINK = "0x326C977E6efc84E512bB9C30f76E30c160eD06FB"  //GOERLI token
-    const WBTC = "0xC04B0d3107736C32e19F1c62b2aF67BE61d63a05" //Goerli
-    const UNI = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"   //Goerli
-    const pricefeed_link = "0xd8bD0a1cB028a31AA859A21A3758685a95dE4623";
+    // const DAI = "0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658"
+    // const WETH = "0xc778417E063141139Fce010982780140Aa0cD5Ab"
+    // const ETH = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+    // const LINK = "0x326C977E6efc84E512bB9C30f76E30c160eD06FB"  //GOERLI token
+    // const pricefeed_link = "0xd8bD0a1cB028a31AA859A21A3758685a95dE4623";
 
-
-    let link;
-    let weth;
-    const xLock = "0xfF3A02b02F1E840700B3946e7497268fb4D3bC0D";  
-    const xtokenAddress = "0x8D92a5B06507232e338a771388617047f14A69cE"  //GOERLI
+    // let link;
+    // let weth;
+    const xLock = "0x5fea9C39b3b662B69607cd83817F72d4F5468175";  
+    const xtokenAddress = "0x4d8013567bc151B427ADaBDa7A71c615BBDD2abB"  //SEPOLIA
 
     const xlock_contract = await hre.ethers.getContractAt("XLock", xLock);
     const xtoken_contract =  await hre.ethers.getContractAt("XToken", xtokenAddress)
-    console.log(await xlock_contract.address);
+    // console.log(await xtoken_contract);
     // const tx = await xtoken_contract.initLock(xLock)
 
-    
-    const tx_addToken = await xlock_contract.addToken('0x326C977E6efc84E512bB9C30f76E30c160eD06FB', 1, "0xd8bD0a1cB028a31AA859A21A3758685a95dE4623")
-    tx_addToken.wait()
-    console.log("TTTTTTTT",await tx_addToken)
-    const token = await xlock_contract._idVsLockedAsset(0)
-    console.log("Token", await token)
     // const tx = await xlock_contract.getToken("0x326C977E6efc84E512bB9C30f76E30c160eD06FB")
 
     // console.log(await tx)
@@ -36,14 +27,15 @@ async function main() {
    
     // console.log(await xlock_contract)
 
-    // console.log(await tx_addToken)
-    const amount = ethers.BigNumber.from('1000000000000');
-    // console.log("MINIMUM AMOUNT", await xlock_contract.getAmountOutMin(WETH, UNI, amount));
+    const tx_addToken = await xlock_contract.addToken('0xc778417E063141139Fce010982780140Aa0cD5Ab', 1, "0xd8bD0a1cB028a31AA859A21A3758685a95dE4623")
+    console.log(await tx_addToken)
+
+    options = {gasLimit: 29000000}
+
     
-    // options = {gasLimit: 21000000}
-    // const tx_deposit = await xlock_contract.deposit(LINK, '0xb114E604972e7D2e510730768226DEB6B0F07363', LINK,  1000000000000000, 1722690841, [[200, 100]], false, false, options)
-    // // await tx_deposit.wait()
-    // console.log("Deposit is done")
+    const tx_deposit = await xlock_contract.deposit(xtokenAddress, '0xb114E604972e7D2e510730768226DEB6B0F07363', xtokenAddress,  10000, 1722690841, [[200, 100]], false, false, options)
+    // await tx_deposit.wait()
+    console.log("Deposit is done")
 
     // await xtoken_contract.initLock(contractAddress);   //OPEN when first deployed
     // console.log("Xlock from Xtoken", await xtoken_contract.loc());
