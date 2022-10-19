@@ -370,60 +370,60 @@ describe("Lock", function () {
 
   describe('SWAPS', () => {
 
-    it('should swap properly deposited amounts ETH only', async () => {
+    // it('should swap properly deposited amounts ETH only', async () => {
 
-      const {xlock_contract, coin_whale, thirdOne} = await loadFixture(deployTokenFixture);
+    //   const {xlock_contract, coin_whale, thirdOne} = await loadFixture(deployTokenFixture);
       
-      let amount = ethers.BigNumber.from('3000000000000000000');
-      let options =  {gasPrice: ethers.utils.parseUnits('50', 'gwei'), value: ethers.utils.parseUnits('5', 'ether')};
+    //   let amount = ethers.BigNumber.from('3000000000000000000');
+    //   let options =  {gasPrice: ethers.utils.parseUnits('50', 'gwei'), value: ethers.utils.parseUnits('5', 'ether')};
       
-      xlock_contract.addToken(ETH, amount, pricefeed_eth);
+    //   xlock_contract.addToken(ETH, amount, pricefeed_eth);
   
-      await xlock_contract.connect(coin_whale).deposit( ETH, thirdOne.address, LINK, amount, 1743743187, [[200, 50], [200, 50]], true, false, options)
+    //   await xlock_contract.connect(coin_whale).deposit( ETH, thirdOne.address, LINK, amount, 1743743187, [[200, 50], [200, 50]], true, false, options)
     
-      console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0));
-      // console.log("BEFORE CLAIM getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
+    //   console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0));
+    //   // console.log("BEFORE CLAIM getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
 
-      console.log("xlock_contract Balance of ETH before: ", await ethers.provider.getBalance(xlock_contract.address));
-      console.log("Third Dai BEFORE", await dai.balanceOf(thirdOne.address));
+    //   console.log("xlock_contract Balance of ETH before: ", await ethers.provider.getBalance(xlock_contract.address));
+    //   console.log("Third Dai BEFORE", await dai.balanceOf(thirdOne.address));
 
-      await xlock_contract.claim(0, DAI);
-      await xlock_contract.claim(0, DAI);
-      console.log("After Claim ------------------------------------------------------------");
-      // console.log("AFTER CLAIM getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
-      console.log("ETH toekn info: ", await xlock_contract.getToken(ETH))
-      console.log("xlock_contract Balance of ETH after: ", await ethers.provider.getBalance(xlock_contract.address));
-      console.log("ThirdOne Balance of ETH: ", await ethers.provider.getBalance(thirdOne.address));
-      console.log("Third Dai AFTER", await dai.balanceOf(thirdOne.address));
-    })
+    //   await xlock_contract.claim(0, DAI);
+    //   await xlock_contract.claim(0, DAI);
+    //   console.log("After Claim ------------------------------------------------------------");
+    //   // console.log("AFTER CLAIM getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
+    //   console.log("ETH toekn info: ", await xlock_contract.getToken(ETH))
+    //   console.log("xlock_contract Balance of ETH after: ", await ethers.provider.getBalance(xlock_contract.address));
+    //   console.log("ThirdOne Balance of ETH: ", await ethers.provider.getBalance(thirdOne.address));
+    //   console.log("Third Dai AFTER", await dai.balanceOf(thirdOne.address));
+    // })
 
-    it('should swap properly deposited amounts not ETH', async () => {
-      const {xlock_contract, coin_whale, beneficary} = await loadFixture(deployTokenFixture);
-      const amount = ethers.BigNumber.from('3000000000000000000');
-      const amoun_to_deposit = ethers.BigNumber.from("2000000000000000000");
-      xlock_contract.addToken(LINK, 1, pricefeed_link);
+    // it('should swap properly deposited amounts not ETH', async () => {
+    //   const {xlock_contract, coin_whale, beneficary} = await loadFixture(deployTokenFixture);
+    //   const amount = ethers.BigNumber.from('3000000000000000000');
+    //   const amoun_to_deposit = ethers.BigNumber.from("2000000000000000000");
+    //   xlock_contract.addToken(LINK, 1, pricefeed_link);
     
-      await link.connect(coin_whale).approve(xlock_contract.address,amount);
-      await xlock_contract.connect(coin_whale).deposit( LINK,beneficary.address,LINK, amoun_to_deposit, 1743743187, [[200, 10], [300, 70], [400, 20]], false, false)
+    //   await link.connect(coin_whale).approve(xlock_contract.address,amount);
+    //   await xlock_contract.connect(coin_whale).deposit( LINK,beneficary.address,LINK, amoun_to_deposit, 1743743187, [[200, 10], [300, 70], [400, 20]], false, false)
 
 
-      console.log("xlock_contract balance of WBTC", await wbtc.balanceOf(xlock_contract.address));
-      console.log("WBTC toekn info: ", await xlock_contract.getToken(WBTC));
-      // console.log("AFTER 2nd claim getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
-      console.log("beneficary DAI", await dai.balanceOf(beneficary.address));
+    //   console.log("xlock_contract balance of WBTC", await wbtc.balanceOf(xlock_contract.address));
+    //   console.log("WBTC toekn info: ", await xlock_contract.getToken(WBTC));
+    //   // console.log("AFTER 2nd claim getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
+    //   console.log("beneficary DAI", await dai.balanceOf(beneficary.address));
 
-      await xlock_contract.claim(0, DAI);
+    //   await xlock_contract.claim(0, DAI);
 
-      console.log("beneficary DAI", await dai.balanceOf(beneficary.address));
+    //   console.log("beneficary DAI", await dai.balanceOf(beneficary.address));
 
-    })
+    // })
 
-    it('should swap properly deposited amounts not ETH', async () => {
-      const {xlock_contract} = await loadFixture(deployTokenFixture);
-      const amount = ethers.BigNumber.from('3000000000000000000');
-      // xlock_contract.addToken(LINK, 1, pricefeed_link);
-      console.log("MINIMUM AMOUNT", await xlock_contract.getAmountOutMin(LINK, WETH, amount));
-    })
+    // it('should swap properly deposited amounts not ETH', async () => {
+    //   const {xlock_contract} = await loadFixture(deployTokenFixture);
+    //   const amount = ethers.BigNumber.from('3000000000000000000');
+    //   // xlock_contract.addToken(LINK, 1, pricefeed_link);
+    //   console.log("MINIMUM AMOUNT", await xlock_contract.getAmountOutMin(LINK, WETH, amount));
+    // })
 
     // it("Check receive function", async () => {
     //   const {xlock_contract} = await loadFixture(deployTokenFixture);
@@ -436,8 +436,36 @@ describe("Lock", function () {
     // }
     //   await owner.sendTransaction(tx);
     //   console.log("xlock_contract Balance of ETH after: ", await ethers.provider.getBalance(xlock_contract.address));
-
     // })
+
+    it('should swap properly deposited amounts not ETH to ETH', async () => {
+      const {xlock_contract, coin_whale, beneficary} = await loadFixture(deployTokenFixture);
+      const amount = ethers.BigNumber.from('3000000000000000000');
+      const amoun_to_deposit = ethers.BigNumber.from("2000000000000000000");
+      xlock_contract.addToken(WETH, 1, pricefeed_eth);
+      xlock_contract.addToken(DAI, 1, pricefeed_dai);
+      console.log("WBTC toekn info: ", await xlock_contract.getToken(DAI));
+    
+      await dai.connect(coin_whale).approve(xlock_contract.address,amount);
+
+      console.log("coin_whale Balance of ETH BEFORE CLAIM: ", await ethers.provider.getBalance(coin_whale.address));
+      console.log("Whale WETH", await weth.balanceOf(coin_whale.address));
+
+      const options = {value: amoun_to_deposit};
+      await xlock_contract.connect(coin_whale).deposit(DAI, beneficary.address,ETH, amoun_to_deposit, 1743743187, [[200, 10], [300, 70], [400, 20]], true, false)
+
+
+      // console.log("xlock_contract balance of WBTC", await wbtc.balanceOf(xlock_contract.address));
+      // // console.log("AFTER 2nd claim getLockedAsset:  ", await xlock_contract.getLockedAsset(0));
+      // console.log("Whale WETH", await link.balanceOf(coin_whale.address));
+
+      // console.log("Xlock Balance of ETH BEFORE CLAIM: ", await ethers.provider.getBalance(xlock_contract.address));
+
+      await xlock_contract.claim(0, ETH);
+
+      // console.log("beneficary Balance of ETH AFTER CLIAM: ", await ethers.provider.getBalance(beneficary.address));
+
+    })
   })
 
   describe('SetToken function check', () => {
@@ -460,5 +488,57 @@ describe("Lock", function () {
    
 
     // })
+  })
+
+  describe('Checks FEE Functionality', () => {
+
+    //   it('Checks _calculateFee function', async () => {
+    //     const {xlock_contract, coin_whale, beneficary} = await loadFixture(deployTokenFixture);
+    //     xlock_contract.addToken(WBTC, 1000, pricefeed_wbtc);
+    //     await wbtc.connect(coin_whale).approve(xlock_contract.address, 1000000000000000);
+    //     await xlock_contract.setFee(0, 10);
+    //     console.log("startFee", await xlock_contract.StartFee());
+    //     console.log("CalculateFee", await xlock_contract._calculateFee(10000000000, false))
+
+    // })
+
+  //   it('Checks DEPOSIT fee', async () => {
+  //     const {xlock_contract, coin_whale, beneficary} = await loadFixture(deployTokenFixture);
+  //     xlock_contract.addToken(WBTC, 1000, pricefeed_wbtc);
+
+  //     await wbtc.connect(coin_whale).approve(xlock_contract.address, 1000000000000000);
+  //     await xlock_contract.setFee(1, 0);
+  //     console.log("startFee", await xlock_contract.StartFee());
+  //     console.log("CalculateFee", await xlock_contract._calculateFee(10000000000, false))
+
+  //     await xlock_contract.connect(coin_whale).deposit( WBTC, beneficary.address, WBTC, 1000, 1743743187, [[10, 50], [2, 50]],false, false)
+      
+  //     console.log("WBTC token balance from commision: ", await xlock_contract.getToken(WBTC));
+  //     console.log("All WBTC toekn in Xlock: ", await wbtc.balanceOf(xlock_contract.address));
+  // })
+
+  // it ('Checks CLAIM fee', async () => {
+  //   const {xlock_contract, coin_whale, beneficary} = await loadFixture(deployTokenFixture);
+  //   xlock_contract.addToken(WBTC, 1000, pricefeed_wbtc);
+
+  //   await wbtc.connect(coin_whale).approve(xlock_contract.address, 1000000000000000);
+  //   await xlock_contract.setFee(0, 3);
+  //   console.log("startFee", await xlock_contract.StartFee());
+  //   console.log("CalculateFee", await xlock_contract._calculateFee(10000000000, false))
+
+  //   await xlock_contract.connect(coin_whale).deposit( WBTC, beneficary.address, WBTC, 1000, 1743743187, [[120, 50], [200, 50]],false, false)
+    
+  //   console.log("WBTC token balance from commision: ", await xlock_contract.getToken(WBTC));
+  //   console.log("All WBTC toekn in Xlock: ", await wbtc.balanceOf(xlock_contract.address));
+
+  //   await xlock_contract.claim(0, WBTC);
+  //   await xlock_contract.claim(0, WBTC);
+
+
+  //   console.log("WBTC token balance from commision AFTER CLAIM: ", await xlock_contract.getToken(WBTC));
+  //   console.log("All WBTC toekn in Xlock AFTER CLAIM: ", await wbtc.balanceOf(xlock_contract.address));
+  //   // console.log("_idVsLockedAsset", await xlock_contract._idVsLockedAsset(0));
+  // })
+
   })
 })

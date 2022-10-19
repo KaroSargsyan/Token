@@ -80,6 +80,31 @@
       "address": "0x00CAC06Dd0BB4103f8b62D280fE9BCEE8f26fD59",
       "txHash": "0x035cbd72f91911927ae46a7aaead1f06914678c3ad2ae924ecc6fdf5d5c6c0b1",
       "kind": "uups"
+    },
+    {
+      "address": "0x4951A1C579039EbfCBA0BE33D2cd3A6D30b0f802",
+      "txHash": "0x5ce7d69c3f267d5aabe0450c3ccee0f406130b2997b24db47012dc027c0276a0",
+      "kind": "uups"
+    },
+    {
+      "address": "0x24d41dbc3d60d0784f8a937c59FBDe51440D5140",
+      "txHash": "0x03c1bafecd92a97b4285751b04606a105f5cfc8d93e1aed59dcb7a8a8048cb5b",
+      "kind": "uups"
+    },
+    {
+      "address": "0x313F922BE1649cEc058EC0f076664500c78bdc0b",
+      "txHash": "0x95f7e8ad3a2bc20fd11e24e194871ab1f46e57819b8e14615d3bfbd653b4d1b6",
+      "kind": "uups"
+    },
+    {
+      "address": "0xa27aee16Cf3A04f66FB4853b955f2B9FC9A12Ae3",
+      "txHash": "0x929356b0cdeb77cd1f136245957a2691f86089d9fa362c444e0c7a5b3f34aa5d",
+      "kind": "uups"
+    },
+    {
+      "address": "0xeC827421505972a2AE9C320302d3573B42363C26",
+      "txHash": "0x403f8fd415d31acbb57e96259d808357da9ae199dce4d306a2db2a43ec7d73cb",
+      "kind": "uups"
     }
   ],
   "impls": {
@@ -1426,6 +1451,678 @@
               {
                 "label": "status",
                 "type": "t_enum(Status)3328",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "4a77e364aa4481243dfc9c94deb0fd828ea995ec5c2fbd59df0fc1542cea9fa4": {
+      "address": "0xA3307BF348ACC4bEDdd67CCA2f7F0c4349d347Db",
+      "txHash": "0xa300bd5f04487c1a021b9903f8ac52574e26bc44f49a4ed89abba4103009e051",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC165Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol:41"
+          },
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_string_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:25"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_string_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:28"
+          },
+          {
+            "label": "_owners",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:31"
+          },
+          {
+            "label": "_balances",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:34"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:37"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "106",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:40"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "107",
+            "type": "t_array(t_uint256)44_storage",
+            "contract": "ERC721Upgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol:465"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "251",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "minLockDate",
+            "offset": 0,
+            "slot": "301",
+            "type": "t_uint256",
+            "contract": "XNft",
+            "src": "contracts/Xlock_nft.sol:21"
+          },
+          {
+            "label": "_lockId",
+            "offset": 0,
+            "slot": "302",
+            "type": "t_uint256",
+            "contract": "XNft",
+            "src": "contracts/Xlock_nft.sol:22"
+          },
+          {
+            "label": "_tokenVsIndex",
+            "offset": 0,
+            "slot": "303",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "XNft",
+            "src": "contracts/Xlock_nft.sol:25"
+          },
+          {
+            "label": "_userVsLockIds",
+            "offset": 0,
+            "slot": "304",
+            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)",
+            "contract": "XNft",
+            "src": "contracts/Xlock_nft.sol:26"
+          },
+          {
+            "label": "_idVsLockedAsset",
+            "offset": 0,
+            "slot": "305",
+            "type": "t_mapping(t_uint256,t_struct(LockedAsset)15345_storage)",
+            "contract": "XNft",
+            "src": "contracts/Xlock_nft.sol:27"
+          },
+          {
+            "label": "_tokens",
+            "offset": 0,
+            "slot": "306",
+            "type": "t_array(t_struct(Token)15327_storage)dyn_storage",
+            "contract": "XNft",
+            "src": "contracts/Xlock_nft.sol:34"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_address_payable": {
+            "label": "address payable",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Token)15327_storage)dyn_storage": {
+            "label": "struct XNft.Token[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)44_storage": {
+            "label": "uint256[44]",
+            "numberOfBytes": "1408"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_enum(Status)15308": {
+            "label": "enum XNft.Status",
+            "members": [
+              "x",
+              "CLOSED",
+              "OPEN"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(address => uint256[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(LockedAsset)15345_storage)": {
+            "label": "mapping(uint256 => struct XNft.LockedAsset)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(LockedAsset)15345_storage": {
+            "label": "struct XNft.LockedAsset",
+            "members": [
+              {
+                "label": "contractAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "beneficiary",
+                "type": "t_address_payable",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "tokenId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "startDate",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "endDate",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(Status)15308",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_struct(Token)15327_storage": {
+            "label": "struct XNft.Token",
+            "members": [
+              {
+                "label": "tokenAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "balance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "b67be01b123d57f5b916c15f87bcfe65ebca7d8a2c4370c35a00e85551437484": {
+      "address": "0x6b39b761b1b64C8C095BF0e3Bb0c6a74705b4788",
+      "txHash": "0xa94202b2cd0cbb5ab155e1f809e4779e0abd0353578cf8aa299467c899b77aa7",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "contracts/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "contracts/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "contracts/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "contracts/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "contracts/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "contracts/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "contracts/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "UNISWAP_V2_ROUTER",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:17"
+          },
+          {
+            "label": "ETH",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:18"
+          },
+          {
+            "label": "WETH",
+            "offset": 0,
+            "slot": "203",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:19"
+          },
+          {
+            "label": "DAI",
+            "offset": 0,
+            "slot": "204",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:20"
+          },
+          {
+            "label": "Wallet",
+            "offset": 0,
+            "slot": "205",
+            "type": "t_address",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:21"
+          },
+          {
+            "label": "minLockDate",
+            "offset": 0,
+            "slot": "206",
+            "type": "t_uint256",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:23"
+          },
+          {
+            "label": "_lockId",
+            "offset": 0,
+            "slot": "207",
+            "type": "t_uint256",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:24"
+          },
+          {
+            "label": "StartFee",
+            "offset": 0,
+            "slot": "208",
+            "type": "t_uint256",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:26"
+          },
+          {
+            "label": "EndFee",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_uint256",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:27"
+          },
+          {
+            "label": "_tokenVsIndex",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:31"
+          },
+          {
+            "label": "_userVsLockIds",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:32"
+          },
+          {
+            "label": "_idVsLockedAsset",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_mapping(t_uint256,t_struct(LockedAsset)3412_storage)",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:33"
+          },
+          {
+            "label": "xtoken",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_contract(XToken)5472",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:43"
+          },
+          {
+            "label": "_tokens",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_array(t_struct(Token)3386_storage)dyn_storage",
+            "contract": "XLock",
+            "src": "contracts/XLock.sol:68"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_address_payable": {
+            "label": "address payable",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_array(t_uint256)dyn_storage)dyn_storage": {
+            "label": "uint256[][]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Token)3386_storage)dyn_storage": {
+            "label": "struct XLock.Token[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(XToken)5472": {
+            "label": "contract XToken",
+            "numberOfBytes": "20"
+          },
+          "t_enum(Status)3332": {
+            "label": "enum XLock.Status",
+            "members": [
+              "x",
+              "CLOSED",
+              "OPEN"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_int256": {
+            "label": "int256",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(address => uint256[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(LockedAsset)3412_storage)": {
+            "label": "mapping(uint256 => struct XLock.LockedAsset)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(LockedAsset)3412_storage": {
+            "label": "struct XLock.LockedAsset",
+            "members": [
+              {
+                "label": "token",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "beneficiary",
+                "type": "t_address_payable",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "swapTokenforLimitOrder",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "startDate",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "endDate",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "priceInUSD",
+                "type": "t_int256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "option",
+                "type": "t_array(t_array(t_uint256)dyn_storage)dyn_storage",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "isExchangable",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "limitOrder",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "8"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(Status)3332",
+                "offset": 2,
+                "slot": "8"
+              }
+            ],
+            "numberOfBytes": "288"
+          },
+          "t_struct(Token)3386_storage": {
+            "label": "struct XLock.Token",
+            "members": [
+              {
+                "label": "tokenAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "priceFeedAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "minAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "balance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(Status)3332",
                 "offset": 0,
                 "slot": "4"
               }

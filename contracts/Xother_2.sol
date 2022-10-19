@@ -169,7 +169,6 @@ contract Xother2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             require( msg.value >= newAmount,"Insufficient funds");
             token.balance += msg.value - newAmount;
         } else {
-            // console.log("Aaaaaaaaaaaaaa", msg.sender, address(this), newAmount);
             ERC20Upgradeable(_token).transferFrom(msg.sender, address(this), newAmount);
 
         }
@@ -232,10 +231,8 @@ contract Xother2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             }
         } else {
             if (asset.isExchangable){
-                console.log("1111111111111111111111111111");
                 swap(asset.token, SWAPTOKEN, newAmount, asset.beneficiary);  //CHANGE: remove 0
             } else {
-                console.log("22222222222222222222");
                 ERC20Upgradeable(asset.token).transfer(asset.beneficiary, newAmount);
             }
         }
@@ -315,7 +312,6 @@ contract Xother2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 block.timestamp
             );
         } else {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaa");
             ERC20Upgradeable(_tokenIn).approve(UNISWAP_V2_ROUTER, _amountIn);
             uint amountOutMin = getAmountOutMin(_tokenIn, _tokenOut, _amountIn);
             address[] memory path;
@@ -331,13 +327,6 @@ contract Xother2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 path[2] = _tokenOut;
             }
 
-            console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", ERC20Upgradeable(_tokenIn).allowance(address(this), UNISWAP_V2_ROUTER));
-        
-            console.log("_amountIn", _amountIn);
-            console.log("_amountOutMin", amountOutMin);
-            // console.log("path", path);
-            console.log("_to", _to);
-
 
 
             IUniswapV2Router01(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
@@ -347,7 +336,6 @@ contract Xother2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
                 _to,
                 block.timestamp
             );
-            console.log("cccccccccccccccccccccccc");
 
         }
     }
@@ -362,7 +350,6 @@ contract Xother2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     {
         address[] memory path;
         if (_tokenIn == WETH || _tokenOut == WETH) {
-            console.log("geeeeeeeet");
 
             path = new address[](2);
             path[0] = _tokenIn;
@@ -373,9 +360,7 @@ contract Xother2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
             path[1] = WETH;
             path[2] = _tokenOut;
         }
-        console.log("geeeeeeeet22222222222222222");
         uint256[] memory amountOutMins = IUniswapV2Router01(UNISWAP_V2_ROUTER).getAmountsOut(_amountIn,path);
-        console.log("geeeeeeeet33333333333333333333333");
 
         return amountOutMins[path.length -1]; 
     }

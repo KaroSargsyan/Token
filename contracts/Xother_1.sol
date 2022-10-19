@@ -9,12 +9,11 @@ import "./OwnableUpgradeable.sol";
 import "./IUniswapV2Router01.sol";
 import "./AggregatorV3Interface.sol";
 import "./XToken.sol";
-import "hardhat/console.sol";
 import "./XLock.sol";
 
 
 contract Xother1 is XLock {
-    function newFunc() pure public returns(uint){
-        return 55555555555555;
-    }
+    // function newFunc() pure public returns(uint){
+    //     return 5555555555;
+    // }
 }
